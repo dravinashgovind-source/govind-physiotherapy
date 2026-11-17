@@ -152,6 +152,9 @@ async function newPage(opts = {}) {
   const { ctx, page } = await newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await page.goto(base + '/app', { waitUntil: 'networkidle' });
   check('App: hero renders', (await page.locator('h1').count()) === 1 && (await page.getByText('Live Better.', { exact: true }).isVisible()));
+  check('App: hero video plays', await page.evaluate(async () => { const v = document.querySelector('main video'); await new Promise((r) => setTimeout(r, 1500)); return !!v && !v.paused && v.currentTime > 0; }));
+  await page.getByRole('button', { name: 'Pause clinic video' }).click();
+  check('App: video can be paused', await page.evaluate(() => document.querySelector('main video').paused));
   check('App: site header hidden', !(await page.locator('header nav[aria-label="Main"]').isVisible()));
   await page.getByRole('button', { name: 'Pain Relief' }).click();
   await page.waitForTimeout(700);

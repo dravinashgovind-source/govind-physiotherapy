@@ -25,6 +25,7 @@ import {
   CalendarCheck,
   Stethoscope,
   Play,
+  Pause,
   ArrowUpRight,
   BadgeCheck,
   ClipboardCheck,
@@ -193,47 +194,93 @@ const areas = [
   { img: 'app-neck', region: 'neck' as const },
 ];
 
+function HeroVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduce = useReducedMotion();
+  const [playing, setPlaying] = useState(false);
+  // Respect reduced motion and data-saver: show the still frame; the visitor can still press play.
+  const autoplay = !reduce && !(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || !autoplay) return;
+    v.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+  }, [autoplay]);
+
+  const toggle = () => {
+    const v = ref.current;
+    if (!v) return;
+    if (v.paused) v.play().then(() => setPlaying(true)).catch(() => {});
+    else {
+      v.pause();
+      setPlaying(false);
+    }
+  };
+
+  return (
+    <>
+      <div
+        className="absolute inset-0 overflow-hidden"
+        style={{ WebkitMaskImage: 'linear-gradient(180deg, #000 62%, transparent 100%)', maskImage: 'linear-gradient(180deg, #000 62%, transparent 100%)' }}
+      >
+        <video
+          ref={ref}
+          className="h-full w-full object-cover object-center"
+          src="/video/clinic-tour.mp4"
+          poster="/video/clinic-tour-poster.webp"
+          muted
+          loop
+          playsInline
+          preload={autoplay ? 'auto' : 'none'}
+          aria-label="A walkthrough of the clinic: reception, treatment equipment and the therapy hall."
+        />
+        {/* Shade: top for the app bar, left/bottom for the text, and a seamless fade into the app background */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(180deg, rgba(11,30,74,.75) 0%, rgba(11,30,74,0) 22%), linear-gradient(0deg, rgba(11,30,74,.9) 0%, rgba(11,30,74,.82) 30%, rgba(11,30,74,.3) 58%, rgba(11,30,74,.05) 78%)',
+          }}
+        />
+      </div>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={playing ? 'Pause clinic video' : 'Play clinic video'}
+        className="absolute right-4 top-[calc(var(--app-top)+10px)] z-10 grid size-10 place-items-center rounded-full border border-white/20 bg-[#0B1E4A]/45 text-white backdrop-blur"
+      >
+        {playing ? <Pause size={16} aria-hidden="true" /> : <Play size={16} className="ml-0.5" aria-hidden="true" />}
+      </button>
+    </>
+  );
+}
+
 function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: (id: string) => void; onTab: (t: Tab) => void }) {
   const reduce = useReducedMotion();
   return (
     <div className="pb-6">
-      {/* Hero */}
-      <section className="relative min-h-[440px]">
-        <motion.div
-          className="pointer-events-none absolute -right-16 -top-4 h-[480px] w-[340px]"
-          style={{
-            // Feather every edge to transparent so the graphic blends into the app background with no visible frame.
-            WebkitMaskImage: 'radial-gradient(ellipse 62% 58% at 58% 46%, #000 52%, rgba(0,0,0,.6) 68%, transparent 84%)',
-            maskImage: 'radial-gradient(ellipse 62% 58% at 58% 46%, #000 52%, rgba(0,0,0,.6) 68%, transparent 84%)',
-          }}
-          initial={reduce ? false : { opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.1, ease }}
-        >
-          <Photo name="app-hero" widths={[800, 1600]} priority sizes="340px" alt="A translucent anatomical figure running, with glowing joints." imgClassName="h-full w-full object-cover object-[60%_center]" />
-        </motion.div>
-        <div className="relative px-5 pt-8">
-          <motion.h1 className="font-hero text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] [text-shadow:0_2px_18px_rgba(11,30,74,.6)]" initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease }}>
-            <span className="block text-white">Move</span>
-            <span className="block text-white">Better.</span>
-            <span className="block bg-gradient-to-r from-[#9CC2FF] to-[#5FA3FF] bg-clip-text text-transparent">Live Better.</span>
+      {/* Hero: clinic walkthrough video, full-bleed behind the app bar */}
+      <section className="relative flex min-h-[600px] flex-col justify-end" style={{ marginTop: 'calc(-1 * var(--app-top))', paddingTop: 'var(--app-top)' }}>
+        <HeroVideo />
+        <div className="relative px-5 pb-14">
+          <motion.p className="font-hero inline-flex items-center gap-1.5 rounded-full bg-white/12 px-3 py-1.5 text-[12px] font-semibold text-white backdrop-blur" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <MapPin size={13} aria-hidden="true" /> Tilekar Nagar, Kondhwa
+          </motion.p>
+          <motion.h1 className="font-hero mt-4 text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] [text-shadow:0_2px_20px_rgba(6,16,40,.55)]" initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease }}>
+            <span className="block text-white">Move Better.</span>
+            <span className="block bg-gradient-to-r from-[#A9CBFF] to-[#6AAAFF] bg-clip-text text-transparent">Live Better.</span>
           </motion.h1>
-          <motion.p className="mt-4 max-w-[190px] text-[15px] font-medium leading-snug text-white/85" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+          <motion.p className="mt-3 max-w-[290px] text-[15px] font-medium leading-snug text-white/90" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             Personalised physiotherapy for an active, comfortable life.
           </motion.p>
-          <motion.button
-            type="button"
-            onClick={onBook}
-            className="font-hero mt-6 flex h-12 items-center gap-3 rounded-full bg-white pl-6 pr-5 text-[15px] font-bold text-[#0E1E3D] shadow-[0_12px_30px_-10px_rgba(0,0,0,.5)] active:scale-[.98]"
-            initial={reduce ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, ease }}
-          >
-            Book Appointment <ArrowRight size={18} aria-hidden="true" />
-          </motion.button>
-          <a href={clinic.google.reviewsUrl} target="_blank" rel="noopener noreferrer" className="font-hero mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/80">
-            <Star size={14} className="fill-[#FBBC04] text-[#FBBC04]" aria-hidden="true" /> {clinic.google.rating.toFixed(1)} on Google
-          </a>
+          <motion.div className="mt-6 flex items-center gap-4" initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, ease }}>
+            <button type="button" onClick={onBook} className="font-hero flex h-12 items-center gap-3 rounded-full bg-white pl-6 pr-5 text-[15px] font-bold text-[#0E1E3D] shadow-[0_12px_30px_-10px_rgba(0,0,0,.5)] active:scale-[.98]">
+              Book Appointment <ArrowRight size={18} aria-hidden="true" />
+            </button>
+            <a href={clinic.google.reviewsUrl} target="_blank" rel="noopener noreferrer" className="font-hero inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/85">
+              <Star size={14} className="fill-[#FBBC04] text-[#FBBC04]" aria-hidden="true" /> {clinic.google.rating.toFixed(1)} Google
+            </a>
+          </motion.div>
         </div>
       </section>
 
@@ -822,7 +869,7 @@ function AppShell({ framed }: { framed?: boolean }) {
       </header>
 
       {/* Scrolling content */}
-      <div ref={scroller} onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 8)} className={`absolute inset-0 overflow-x-hidden overflow-y-auto overscroll-contain pb-28 ${framed ? 'pt-[106px]' : 'pt-[calc(72px+env(safe-area-inset-top))]'} [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}>
+      <div ref={scroller} style={{ ['--app-top' as string]: framed ? '106px' : 'calc(72px + env(safe-area-inset-top))' }} onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 8)} className={`absolute inset-0 overflow-x-hidden overflow-y-auto overscroll-contain pb-28 ${framed ? 'pt-[106px]' : 'pt-[calc(72px+env(safe-area-inset-top))]'} [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.main key={tab} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0 }} transition={{ duration: 0.25 }}>
             {tab === 'home' && (
