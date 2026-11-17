@@ -41,8 +41,8 @@ const pages = [
   },
   {
     path: '/app',
-    title: 'Govind’s Physiotherapy App | Book, routines & clinic info',
-    description: 'Book appointments on WhatsApp, explore services, follow a daily mobility routine and find the clinic. Add the Govind’s app to your home screen.',
+    title: 'Govind’s Physiotherapy App | Book appointments, videos & reviews',
+    description: 'Book appointments on WhatsApp, explore services, watch patient stories and find the clinic. Add the Govind’s app to your home screen.',
     image: '/img/app-hero-1600.webp',
   },
   { path: '/privacy', title: `Privacy | ${BRAND}`, description: `How ${BRAND} handles information you share through this website.` },

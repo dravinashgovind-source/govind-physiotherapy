@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
@@ -7,7 +7,6 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronRight,
-  Circle,
   Clock,
   Download,
   Footprints,
@@ -24,39 +23,40 @@ import {
   X,
   Zap,
   CalendarCheck,
-  Dumbbell,
+  Stethoscope,
+  Play,
+  ArrowUpRight,
+  BadgeCheck,
+  ClipboardCheck,
+  Route,
+  HandHeart,
+  TrendingUp,
 } from 'lucide-react';
 import { Photo } from '../components/Photo';
 import { clinic, telHref, whatsappHref } from '../config/clinic';
 import { services } from '../content/services';
 import { regionById } from '../content/regions';
+import { googleReviews, videos, youtubeChannel } from '../content/media';
+import { GoogleG } from '../components/GoogleG';
 import { isValidIndianMobile, openWhatsApp } from '../sections/FinalCta';
 import { useSeo } from '../lib/seo';
 
 const NAVY = '#0B1E4A';
 const ease = [0.16, 1, 0.3, 1] as const;
-type Tab = 'home' | 'services' | 'routine' | 'visit';
+type Tab = 'home' | 'services' | 'appointment' | 'visit';
 
 /* ------------------------------------------------------------------ booking sheet */
 
 const concerns = ['Back pain / Sciatica', 'Neck pain', 'Shoulder pain', 'Knee pain', 'Ankle / Heel pain', 'Post-surgery rehab', 'Sports injury', 'Senior care', 'Posture correction', 'Other / not sure'];
 
-function BookingSheet({ open, onClose, preset }: { open: boolean; onClose: () => void; preset?: string }) {
+function BookingForm({ preset, formLabel = 'App booking form' }: { preset?: string; formLabel?: string }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [concern, setConcern] = useState('');
+  const [concern, setConcern] = useState(preset ?? '');
   const [time, setTime] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState<null | { ok: boolean; href: string }>(null);
   const id = useId();
-
-  useEffect(() => {
-    if (open) {
-      setConcern(preset ?? '');
-      setDone(null);
-      setErrors({});
-    }
-  }, [open, preset]);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -76,6 +76,62 @@ function BookingSheet({ open, onClose, preset }: { open: boolean; onClose: () =>
   const input = 'mt-1.5 w-full rounded-2xl border bg-[#F6F8FC] px-4 py-3 text-[15px] text-[#0E1E3D] placeholder:text-[#9AA6BA] focus:border-[#2463EB] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#2463EB]/15';
   const err = (k: string) => errors[k] && <p className="mt-1 flex items-center gap-1 text-[13px] text-[#D93B2B]"><AlertCircle size={13} aria-hidden="true" /> {errors[k]}</p>;
 
+  if (done)
+    return (
+      <div role="status" className="py-4">
+        <CheckCircle2 size={40} className={done.ok ? 'text-[#22A06B]' : 'text-[#D93B2B]'} aria-hidden="true" />
+        <p className="font-hero mt-4 text-xl font-extrabold text-[#0E1E3D]">{done.ok ? 'Almost done!' : 'WhatsApp didn’t open.'}</p>
+        <p className="mt-2 text-[15px] text-[#3B4A63]">{done.ok ? 'Press send in WhatsApp and the clinic will confirm your time.' : 'Tap below to open your message.'}</p>
+        <a href={done.href} target="_blank" rel="noopener noreferrer" className="font-hero mt-6 flex h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] font-bold text-white">
+          <MessageCircle size={18} aria-hidden="true" /> Open WhatsApp
+        </a>
+        <button type="button" onClick={() => setDone(null)} className="font-hero mt-3 w-full py-2 text-sm font-semibold text-[#1D4FD8]">
+          Edit details
+        </button>
+      </div>
+    );
+
+  return (
+    <form noValidate onSubmit={submit} className="space-y-4" aria-label={formLabel}>
+      <div>
+        <label htmlFor={`${id}-n`} className="font-hero text-sm font-semibold text-[#0E1E3D]">Full name</label>
+        <input id={`${id}-n`} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={`${input} ${errors.name ? 'border-[#D93B2B]' : 'border-[#E1E7F0]'}`} aria-invalid={!!errors.name || undefined} />
+        {err('name')}
+      </div>
+      <div>
+        <label htmlFor={`${id}-p`} className="font-hero text-sm font-semibold text-[#0E1E3D]">Mobile number</label>
+        <input id={`${id}-p`} type="tel" inputMode="tel" autoComplete="tel" placeholder="98xxx xxxxx" value={phone} onChange={(e) => setPhone(e.target.value)} className={`${input} ${errors.phone ? 'border-[#D93B2B]' : 'border-[#E1E7F0]'}`} aria-invalid={!!errors.phone || undefined} />
+        {err('phone')}
+      </div>
+      <div>
+        <label htmlFor={`${id}-c`} className="font-hero text-sm font-semibold text-[#0E1E3D]">What do you need help with?</label>
+        <select id={`${id}-c`} value={concern} onChange={(e) => setConcern(e.target.value)} className={`${input} ${errors.concern ? 'border-[#D93B2B]' : 'border-[#E1E7F0]'}`} aria-invalid={!!errors.concern || undefined}>
+          <option value="">Select…</option>
+          {concerns.map((c) => (
+            <option key={c}>{c}</option>
+          ))}
+        </select>
+        {err('concern')}
+      </div>
+      <fieldset>
+        <legend className="font-hero text-sm font-semibold text-[#0E1E3D]">Preferred time</legend>
+        <div className="mt-1.5 grid grid-cols-3 gap-2">
+          {['Morning', 'Afternoon', 'Evening'].map((t) => (
+            <button key={t} type="button" aria-pressed={time === t} onClick={() => setTime(time === t ? '' : t)} className={`font-hero h-11 rounded-2xl border text-sm font-semibold ${time === t ? 'border-[#2463EB] bg-[#2463EB] text-white' : 'border-[#E1E7F0] bg-[#F6F8FC] text-[#3B4A63]'}`}>
+              {t}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+      <button type="submit" className="font-hero flex w-full items-center justify-center gap-2 rounded-full bg-[#2463EB] py-3.5 font-bold text-white active:bg-[#1D4FD8]">
+        <MessageCircle size={18} aria-hidden="true" /> Send via WhatsApp
+      </button>
+      <p className="text-center text-xs text-[#9AA6BA]">Goes straight to the clinic on WhatsApp. Nothing is stored here.</p>
+    </form>
+  );
+}
+
+function BookingSheet({ open, onClose, preset }: { open: boolean; onClose: () => void; preset?: string }) {
   return (
     <AnimatePresence>
       {open && (
@@ -92,59 +148,13 @@ function BookingSheet({ open, onClose, preset }: { open: boolean; onClose: () =>
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mx-auto h-1.5 w-11 rounded-full bg-[#DCE3EE]" aria-hidden="true" />
-            <div className="mt-4 flex items-center justify-between">
+            <div className="mb-5 mt-4 flex items-center justify-between">
               <h2 className="font-hero text-xl font-extrabold text-[#0E1E3D]">Book appointment</h2>
               <button type="button" onClick={onClose} aria-label="Close" className="grid size-10 place-items-center rounded-full bg-[#F4F7FC] text-[#0E1E3D]">
                 <X size={18} aria-hidden="true" />
               </button>
             </div>
-            {done ? (
-              <div role="status" className="py-6">
-                <CheckCircle2 size={40} className={done.ok ? 'text-[#22A06B]' : 'text-[#D93B2B]'} aria-hidden="true" />
-                <p className="font-hero mt-4 text-xl font-extrabold text-[#0E1E3D]">{done.ok ? 'Almost done!' : 'WhatsApp didn’t open.'}</p>
-                <p className="mt-2 text-[15px] text-[#3B4A63]">{done.ok ? 'Press send in WhatsApp and the clinic will confirm your time.' : 'Tap below to open your message.'}</p>
-                <a href={done.href} target="_blank" rel="noopener noreferrer" className="font-hero mt-6 flex h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] font-bold text-white">
-                  <MessageCircle size={18} aria-hidden="true" /> Open WhatsApp
-                </a>
-              </div>
-            ) : (
-              <form noValidate onSubmit={submit} className="mt-5 space-y-4" aria-label="App booking form">
-                <div>
-                  <label htmlFor={`${id}-n`} className="font-hero text-sm font-semibold text-[#0E1E3D]">Full name</label>
-                  <input id={`${id}-n`} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={`${input} ${errors.name ? 'border-[#D93B2B]' : 'border-[#E1E7F0]'}`} aria-invalid={!!errors.name || undefined} />
-                  {err('name')}
-                </div>
-                <div>
-                  <label htmlFor={`${id}-p`} className="font-hero text-sm font-semibold text-[#0E1E3D]">Mobile number</label>
-                  <input id={`${id}-p`} type="tel" inputMode="tel" autoComplete="tel" placeholder="98xxx xxxxx" value={phone} onChange={(e) => setPhone(e.target.value)} className={`${input} ${errors.phone ? 'border-[#D93B2B]' : 'border-[#E1E7F0]'}`} aria-invalid={!!errors.phone || undefined} />
-                  {err('phone')}
-                </div>
-                <div>
-                  <label htmlFor={`${id}-c`} className="font-hero text-sm font-semibold text-[#0E1E3D]">What do you need help with?</label>
-                  <select id={`${id}-c`} value={concern} onChange={(e) => setConcern(e.target.value)} className={`${input} ${errors.concern ? 'border-[#D93B2B]' : 'border-[#E1E7F0]'}`} aria-invalid={!!errors.concern || undefined}>
-                    <option value="">Select…</option>
-                    {concerns.map((c) => (
-                      <option key={c}>{c}</option>
-                    ))}
-                  </select>
-                  {err('concern')}
-                </div>
-                <fieldset>
-                  <legend className="font-hero text-sm font-semibold text-[#0E1E3D]">Preferred time</legend>
-                  <div className="mt-1.5 grid grid-cols-3 gap-2">
-                    {['Morning', 'Afternoon', 'Evening'].map((t) => (
-                      <button key={t} type="button" aria-pressed={time === t} onClick={() => setTime(time === t ? '' : t)} className={`font-hero h-11 rounded-2xl border text-sm font-semibold ${time === t ? 'border-[#2463EB] bg-[#2463EB] text-white' : 'border-[#E1E7F0] bg-[#F6F8FC] text-[#3B4A63]'}`}>
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                </fieldset>
-                <button type="submit" className="font-hero flex h-13 w-full items-center justify-center gap-2 rounded-full bg-[#2463EB] py-3.5 font-bold text-white">
-                  <MessageCircle size={18} aria-hidden="true" /> Send via WhatsApp
-                </button>
-                <p className="text-center text-xs text-[#9AA6BA]">Goes straight to the clinic on WhatsApp. Nothing is stored here.</p>
-              </form>
-            )}
+            <BookingForm key={preset ?? 'none'} preset={preset} />
           </motion.div>
         </motion.div>
       )}
@@ -261,6 +271,8 @@ function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: 
         </Glass>
       </div>
 
+      <Banners onBook={onBook} onTab={onTab} />
+
       {/* Where does it hurt */}
       <section className="mt-7" aria-labelledby="app-areas">
         <div className="flex items-end justify-between px-5">
@@ -283,6 +295,9 @@ function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: 
           })}
         </ul>
       </section>
+
+      <VideosRow />
+      <ReviewsRow />
 
       {/* Doctor */}
       <div className="mt-7 px-4">
@@ -313,6 +328,297 @@ function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: 
         </button>
       </div>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ campaign banners */
+
+const TEAL = '#2DE0CF';
+
+function useSlider(count: number) {
+  const ref = useRef<HTMLUListElement>(null);
+  const [index, setIndex] = useState(0);
+  const onScroll = () => {
+    const el = ref.current;
+    if (!el) return;
+    const card = el.querySelector('li');
+    const w = (card?.clientWidth ?? el.clientWidth) + 12;
+    setIndex(Math.max(0, Math.min(count - 1, Math.round(el.scrollLeft / w))));
+  };
+  const go = (i: number) => {
+    const el = ref.current;
+    const card = el?.querySelectorAll('li')[i] as HTMLElement | undefined;
+    if (el && card) el.scrollTo({ left: card.offsetLeft - el.offsetLeft - 20, behavior: 'smooth' });
+  };
+  return { ref, index, onScroll, go };
+}
+
+function Dots({ count, index, go, label }: { count: number; index: number; go: (i: number) => void; label: string }) {
+  return (
+    <div className="mt-3 flex justify-center gap-0.5" role="tablist" aria-label={label}>
+      {Array.from({ length: count }).map((_, i) => (
+        <button key={i} type="button" role="tab" aria-selected={i === index} aria-label={`Slide ${i + 1} of ${count}`} onClick={() => go(i)} className="grid h-8 w-6 place-items-center">
+          <span className="block h-1.5 rounded-full transition-all duration-300" style={{ width: i === index ? 20 : 6, background: i === index ? TEAL : 'rgba(255,255,255,.3)' }} />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Pill({ children, onClick, light }: { children: ReactNode; onClick: () => void; light?: boolean }) {
+  return (
+    <button type="button" onClick={onClick} className={`font-hero inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[13px] font-bold shadow-[0_8px_20px_-8px_rgba(45,224,207,.7)] active:scale-[.98] ${light ? 'bg-[#0E1E3D] text-white' : 'text-[#062226]'}`} style={light ? undefined : { background: TEAL }}>
+      {children} <ArrowRight size={15} aria-hidden="true" />
+    </button>
+  );
+}
+
+function Banners({ onBook, onTab }: { onBook: () => void; onTab: (t: Tab) => void }) {
+  const slider = useSlider(5);
+  const card = 'relative h-[372px] overflow-hidden rounded-[28px]';
+  const img = 'absolute inset-0 h-full w-full object-cover';
+  const display = 'display leading-[0.92] tracking-[0.005em]';
+  return (
+    <section className="mt-7" aria-labelledby="app-banners">
+      <div className="flex items-end justify-between px-5">
+        <h2 id="app-banners" className="font-hero text-lg font-bold text-white">Move better with us</h2>
+        <span className="text-[12px] text-white/50">Swipe →</span>
+      </div>
+      <ul ref={slider.ref} onScroll={slider.onScroll} className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-5 px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* 01 Dynamic movement */}
+        <li className="w-[88%] shrink-0 snap-start">
+          <article className={`${card} bg-[#07121F]`}>
+            <Photo name="app-b1" widths={[800, 1600]} sizes="360px" alt="A woman holding a deep side-lunge stretch with one arm reaching up." imgClassName={`${img} object-[100%_center]`} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(7,18,31,.97) 0%, rgba(7,18,31,.85) 45%, rgba(7,18,31,.1) 80%), linear-gradient(0deg, rgba(7,18,31,.9) 0%, transparent 35%)' }} />
+            <p aria-hidden="true" className="display absolute -left-2 top-3 select-none text-[96px] leading-none text-white/[0.06]">MOVEMENT</p>
+            <div className="relative flex h-full flex-col p-5">
+              <p className="font-hero flex items-center gap-1 self-end text-[11px] font-semibold text-white/75">
+                <MapPin size={12} aria-hidden="true" /> Kondhwa, Pune
+              </p>
+              <h3 className={`${display} mt-6 text-[38px] text-white [text-shadow:0_2px_16px_rgba(7,18,31,.8)]`}>
+                Better
+                <br />
+                Movement
+                <br />
+                <span style={{ color: TEAL }}>Starts now.</span>
+              </h3>
+              <p className="mt-3 max-w-[200px] text-[13px] leading-snug text-white/80">Understand your body. Restore your movement. Reclaim your everyday life.</p>
+              <div className="mt-auto flex items-end justify-between">
+                <Pill onClick={() => onTab('services')}>Explore services</Pill>
+                <span className="font-hero text-[9px] font-semibold tracking-[0.25em]" style={{ color: TEAL }}>MOVE BETTER.</span>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        {/* 02 Split screen story */}
+        <li className="w-[88%] shrink-0 snap-start">
+          <article className={`${card} bg-[#101418]`}>
+            <Photo name="app-b2" widths={[800, 1600]} sizes="360px" alt="A man holding his lower back, with his spine glowing to show the painful area." imgClassName={`${img} object-[80%_center]`} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(14,18,22,.97) 0%, rgba(14,18,22,.8) 45%, rgba(14,18,22,0) 78%), linear-gradient(0deg, rgba(14,18,22,.85) 0%, transparent 30%)' }} />
+            <ol className="absolute right-4 top-1/2 flex -translate-y-1/2 flex-col gap-3.5" aria-label="Your journey">
+              {['Recover', 'Restore', 'Rebuild', 'Live'].map((t, i) => (
+                <li key={t} className="font-hero flex items-center gap-2 text-[11px] font-semibold text-white/85">
+                  <span className="grid size-4 place-items-center rounded-full border" style={{ borderColor: TEAL }}>
+                    {i === 0 && <span className="size-2 rounded-full" style={{ background: TEAL }} />}
+                  </span>
+                  {t}
+                </li>
+              ))}
+            </ol>
+            <div className="relative flex h-full max-w-[66%] flex-col p-5">
+              <h3 className={`${display} mt-8 text-[34px] text-white`}>
+                Listen to
+                <br />
+                <span style={{ color: TEAL }}>your body.</span>
+              </h3>
+              <p className="mt-3 text-[13px] leading-snug text-white/80">Understand what your body is telling you. Get expert physiotherapy care.</p>
+              <div className="mt-auto">
+                <Pill onClick={() => onTab('services')}>Your journey</Pill>
+                <p className="mt-3 text-[11px] text-white/55">Physiotherapy &amp; Rehabilitation</p>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        {/* 03 Lifestyle focus */}
+        <li className="w-[88%] shrink-0 snap-start">
+          <article className={`${card} bg-[#DCE6EE]`}>
+            <Photo name="app-b3" widths={[800, 1600]} sizes="360px" alt="A smiling father carrying his laughing son on his shoulders outdoors." imgClassName={`${img} object-[68%_center]`} />
+            <p aria-hidden="true" className="display absolute -right-3 top-2 select-none text-[120px] leading-none text-white/20">LIVE</p>
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 30%, rgba(8,24,44,.55) 55%, rgba(8,24,44,.95) 100%)' }} />
+            <div className="relative flex h-full flex-col justify-end p-5">
+              <h3 className="font-hero text-[25px] font-extrabold uppercase leading-[1.05] tracking-[0.01em] text-white">
+                It’s not just about pain.
+                <br />
+                <span style={{ color: TEAL }}>It’s about your life.</span>
+              </h3>
+              <ul className="mt-3 flex gap-3 text-[11.5px] font-semibold text-white/90">
+                {['Move freely', 'Feel stronger', 'Live better'].map((t) => (
+                  <li key={t} className="flex items-center gap-1">
+                    <CheckCircle2 size={13} style={{ color: TEAL }} aria-hidden="true" /> {t}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4">
+                <Pill onClick={() => onTab('appointment')}>Start your recovery</Pill>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        {/* 04 Clinical precision */}
+        <li className="w-[88%] shrink-0 snap-start">
+          <article className={`${card}`} style={{ background: NAVY }}>
+            <div
+              className="absolute -right-10 top-0 h-full w-[78%]"
+              style={{ WebkitMaskImage: 'radial-gradient(ellipse 60% 62% at 50% 48%, #000 50%, transparent 85%)', maskImage: 'radial-gradient(ellipse 60% 62% at 50% 48%, #000 50%, transparent 85%)' }}
+            >
+              <Photo name="app-hero" widths={[800, 1600]} sizes="300px" alt="A translucent running figure with glowing joints." imgClassName="h-full w-full object-cover object-[55%_center]" />
+            </div>
+            <ul className="absolute right-3 top-5 space-y-2.5" aria-label="Our approach">
+              {[
+                { i: ClipboardCheck, t: 'Assess' },
+                { i: Route, t: 'Plan' },
+                { i: HandHeart, t: 'Rehabilitate' },
+                { i: TrendingUp, t: 'Progress' },
+              ].map(({ i: Icon, t }) => (
+                <li key={t} className="font-hero flex items-center gap-1.5 rounded-full bg-[#0B1E4A]/70 py-1 pl-1 pr-2.5 text-[10.5px] font-semibold text-white backdrop-blur">
+                  <span className="grid size-6 place-items-center rounded-full border border-white/25">
+                    <Icon size={12} aria-hidden="true" />
+                  </span>
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <div className="relative flex h-full max-w-[62%] flex-col p-5">
+              <h3 className={`${display} mt-10 text-[34px] text-white`}>
+                Advanced
+                <br />
+                care.
+                <br />
+                <span style={{ color: TEAL }}>Lasting relief.</span>
+              </h3>
+              <p className="mt-3 text-[13px] leading-snug text-white/80">Assessment-led physiotherapy for improved mobility.</p>
+              <div className="mt-auto">
+                <Pill onClick={onBook}>Book assessment</Pill>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        {/* 05 Minimal & bold */}
+        <li className="w-[88%] shrink-0 snap-start">
+          <article className={`${card} bg-[#E9EDF0]`}>
+            <Photo name="app-b5" widths={[800, 1600]} sizes="360px" alt="Silhouette of a person with arms raised on a hilltop at sunrise." imgClassName={`${img} object-[82%_center]`} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(240,243,245,.92) 0%, rgba(240,243,245,.55) 55%, rgba(240,243,245,0) 80%)' }} />
+            <div className="relative flex h-full flex-col p-5">
+              <p className="font-hero flex items-center gap-1 self-end text-[11px] font-semibold text-[#0E1E3D]/70">
+                <MapPin size={12} aria-hidden="true" /> Kondhwa, Pune
+              </p>
+              <p className="font-hero mt-8 text-[15px] font-extrabold tracking-[0.55em] text-[#0E1E3D]">BETTER</p>
+              <h3 className="display mt-1 text-[52px] leading-[0.9] text-[#0E1E3D]">Movement</h3>
+              <p className="font-hero mt-1 text-[15px] font-extrabold tracking-[0.3em]" style={{ color: '#0FB5A5' }}>
+                STARTS NOW.
+              </p>
+              <p className="mt-3 max-w-[210px] text-[13px] leading-snug text-[#3B4A63]">Take the first step towards a pain-free, active life.</p>
+              <div className="mt-auto">
+                <Pill onClick={onBook} light>
+                  Book an appointment
+                </Pill>
+              </div>
+            </div>
+          </article>
+        </li>
+      </ul>
+      <Dots count={5} index={slider.index} go={slider.go} label="Banners" />
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ videos & reviews */
+
+function AppVideo({ id, label, topic, title }: { id: string; label: string; topic: string; title: string }) {
+  const [play, setPlay] = useState(false);
+  return (
+    <div className="overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.06]">
+      <div className="relative aspect-video bg-black">
+        {play ? (
+          <iframe className="absolute inset-0 h-full w-full" src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`} title={title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+        ) : (
+          <button type="button" onClick={() => setPlay(true)} className="absolute inset-0" aria-label={`Play video: ${title}`}>
+            <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" className="h-full w-full object-cover" />
+            <span className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-[#E62117] shadow-lg">
+              <Play size={20} className="ml-0.5 fill-current" aria-hidden="true" />
+            </span>
+          </button>
+        )}
+      </div>
+      <div className="p-3.5">
+        <p className="font-hero text-[11px] font-semibold uppercase tracking-[0.1em] text-[#8FB8FF]">{topic}</p>
+        <p className="font-hero mt-0.5 text-[14.5px] font-bold leading-snug text-white">{label}</p>
+      </div>
+    </div>
+  );
+}
+
+function VideosRow() {
+  const slider = useSlider(videos.length);
+  return (
+    <section className="mt-8" aria-labelledby="app-videos">
+      <div className="flex items-end justify-between px-5">
+        <h2 id="app-videos" className="font-hero text-lg font-bold text-white">Patient stories</h2>
+        <a href={youtubeChannel} target="_blank" rel="noopener noreferrer" className="font-hero flex items-center gap-1 py-2 text-[13px] font-semibold text-[#8FB8FF]">
+          YouTube <ArrowUpRight size={14} aria-hidden="true" />
+        </a>
+      </div>
+      <ul ref={slider.ref} onScroll={slider.onScroll} className="mt-2 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-5 px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {videos.map((v) => (
+          <li key={v.id} className="w-[80%] shrink-0 snap-start">
+            <AppVideo {...v} />
+          </li>
+        ))}
+      </ul>
+      <Dots count={videos.length} index={slider.index} go={slider.go} label="Videos" />
+    </section>
+  );
+}
+
+function ReviewsRow() {
+  const slider = useSlider(googleReviews.length);
+  return (
+    <section className="mt-6" aria-labelledby="app-reviews">
+      <div className="flex items-center justify-between px-5">
+        <h2 id="app-reviews" className="font-hero text-lg font-bold text-white">What patients say</h2>
+        <a href={clinic.google.reviewsUrl} target="_blank" rel="noopener noreferrer" className="font-hero flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12.5px] font-bold text-[#0E1E3D]">
+          <GoogleG size={14} /> {clinic.google.rating.toFixed(1)}
+          <Star size={12} className="fill-[#FBBC04] text-[#FBBC04]" aria-hidden="true" />
+        </a>
+      </div>
+      <ul ref={slider.ref} onScroll={slider.onScroll} className="mt-3 flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto scroll-px-5 px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {googleReviews.map((r) => (
+          <li key={r.name} className="w-[82%] shrink-0 snap-start">
+            <figure className="flex h-full flex-col rounded-[22px] border border-white/10 bg-white/[0.06] p-4">
+              <span className="flex gap-0.5 text-[#FBBC04]" aria-label="5 out of 5 stars">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={13} className="fill-current" strokeWidth={0} aria-hidden="true" />
+                ))}
+              </span>
+              <blockquote className="mt-2.5 line-clamp-6 flex-1 text-[13.5px] leading-relaxed text-white/85">“{r.text}”</blockquote>
+              <figcaption className="mt-3 flex items-center gap-1.5 border-t border-white/10 pt-3">
+                <span className="font-hero text-[13.5px] font-bold text-white">{r.name}</span>
+                {r.localGuide && <BadgeCheck size={14} className="text-[#8FB8FF]" aria-label="Google Local Guide" />}
+                <span className="ml-auto text-[11px] text-white/50">{r.when}</span>
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <Dots count={googleReviews.length} index={slider.index} go={slider.go} label="Reviews" />
+      <a href={clinic.google.reviewsUrl} target="_blank" rel="noopener noreferrer" className="font-hero mx-5 mt-1 flex h-11 items-center justify-center gap-1.5 rounded-full border border-white/15 text-[13.5px] font-semibold text-white">
+        Read all reviews on Google <ArrowUpRight size={15} aria-hidden="true" />
+      </a>
+    </section>
   );
 }
 
@@ -351,114 +657,59 @@ function ServicesTab({ focus, onBook }: { focus: string | null; onBook: (concern
   );
 }
 
-/* ------------------------------------------------------------------ routine (saved on this device only) */
+/* ------------------------------------------------------------------ appointment */
 
-const routine = [
-  { id: 'neck', name: 'Neck rotations', dose: '10 each side', tip: 'Turn slowly to look over each shoulder.' },
-  { id: 'shoulder', name: 'Shoulder rolls', dose: '15 backwards', tip: 'Big, slow circles. Relax your jaw.' },
-  { id: 'catcow', name: 'Cat–cow stretch', dose: '10 slow reps', tip: 'On hands and knees, gently arch and round the back.' },
-  { id: 'bridge', name: 'Glute bridges', dose: '2 × 10', tip: 'Lift hips, squeeze, lower with control.' },
-  { id: 'ankle', name: 'Ankle circles', dose: '10 each way', tip: 'Seated, draw circles with each foot.' },
+const firstVisit = [
+  { icon: MessageCircle, t: 'Send your request', d: 'Fill the form below. It opens WhatsApp with your details ready.' },
+  { icon: Phone, t: 'We confirm a time', d: 'The clinic replies to fix a slot that suits you.' },
+  { icon: Stethoscope, t: 'Your assessment', d: 'A one-to-one check of your movement, strength and pain.' },
+  { icon: CalendarCheck, t: 'Your plan starts', d: 'Treatment usually begins on the same day.' },
 ];
-const STORE = 'govind-app-routine';
-const today = () => new Date().toISOString().slice(0, 10);
 
-type RoutineStore = { day: string; done: string[]; history: string[] };
-function loadRoutine(): RoutineStore {
-  try {
-    const raw = JSON.parse(localStorage.getItem(STORE) ?? 'null') as RoutineStore | null;
-    if (raw && raw.day === today()) return raw;
-    return { day: today(), done: [], history: raw?.history ?? [] };
-  } catch {
-    return { day: today(), done: [], history: [] };
-  }
-}
-
-function RoutineTab() {
-  const gid = useId().replace(/:/g, '');
-  const [state, setState] = useState<RoutineStore>(loadRoutine);
-  const toggle = (id: string) => {
-    setState((s) => {
-      const done = s.done.includes(id) ? s.done.filter((x) => x !== id) : [...s.done, id];
-      const complete = done.length === routine.length;
-      const history = complete ? [...new Set([...s.history, s.day])] : s.history.filter((d) => d !== s.day);
-      const next = { ...s, done, history };
-      try {
-        localStorage.setItem(STORE, JSON.stringify(next));
-      } catch {
-        /* storage unavailable: keep in memory */
-      }
-      return next;
-    });
-  };
-  const streak = useMemo(() => {
-    let n = 0;
-    const d = new Date();
-    if (!state.history.includes(today())) d.setDate(d.getDate() - 1);
-    while (state.history.includes(d.toISOString().slice(0, 10))) {
-      n++;
-      d.setDate(d.getDate() - 1);
-    }
-    return n;
-  }, [state.history]);
-  const pct = state.done.length / routine.length;
-  const R = 34;
-  const C = 2 * Math.PI * R;
-
+function AppointmentTab() {
   return (
     <div className="pb-6">
-      <TabTitle eyebrow="Daily routine" title="Keep moving, gently" />
-      <div className="mt-5 px-4">
-        <Glass className="flex items-center gap-5 p-5">
-          <svg width="86" height="86" viewBox="0 0 86 86" role="img" aria-label={`${state.done.length} of ${routine.length} exercises done today`}>
-            <circle cx="43" cy="43" r={R} fill="none" stroke="rgba(255,255,255,.12)" strokeWidth="8" />
-            <circle cx="43" cy="43" r={R} fill="none" stroke={`url(#${gid})`} strokeWidth="8" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - pct)} transform="rotate(-90 43 43)" style={{ transition: 'stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)' }} />
-            <defs>
-              <linearGradient id={gid} x1="0" x2="1">
-                <stop offset="0" stopColor="#5FA3FF" />
-                <stop offset="1" stopColor="#25D3A6" />
-              </linearGradient>
-            </defs>
-            <text x="43" y="49" textAnchor="middle" fill="#fff" style={{ font: '800 20px Manrope, sans-serif' }}>
-              {state.done.length}/{routine.length}
-            </text>
-          </svg>
-          <div>
-            <p className="font-hero text-[17px] font-bold text-white">{pct === 1 ? 'Done for today!' : 'Today’s routine'}</p>
-            <p className="mt-1 text-[13px] text-white/65">About 10 minutes · saved on this phone</p>
-            <p className="font-hero mt-2 text-[13px] font-semibold text-[#8FB8FF]">
-              {streak > 0 ? `🔥 ${streak}-day streak` : 'Complete all 5 to start a streak'}
-            </p>
-          </div>
-        </Glass>
-        <ul className="mt-4 space-y-2.5">
-          {routine.map((ex) => {
-            const done = state.done.includes(ex.id);
-            return (
-              <li key={ex.id}>
-                <button
-                  type="button"
-                  role="checkbox"
-                  aria-checked={done}
-                  onClick={() => toggle(ex.id)}
-                  className={`flex w-full items-center gap-4 rounded-[22px] border p-4 text-left transition-colors ${done ? 'border-[#25D3A6]/40 bg-[#25D3A6]/10' : 'border-white/10 bg-white/[0.06]'}`}
-                >
-                  {done ? <CheckCircle2 size={26} className="shrink-0 text-[#25D3A6]" aria-hidden="true" /> : <Circle size={26} className="shrink-0 text-white/35" aria-hidden="true" />}
-                  <span className="min-w-0 flex-1">
-                    <span className={`font-hero block text-[15px] font-bold ${done ? 'text-white/60 line-through' : 'text-white'}`}>{ex.name}</span>
-                    <span className="block text-[12.5px] text-white/55">{ex.tip}</span>
-                  </span>
-                  <span className="font-hero shrink-0 rounded-full bg-white/10 px-2.5 py-1 text-[11.5px] font-semibold text-white/80">{ex.dose}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="mt-4 flex gap-2 rounded-2xl bg-[#FFB547]/10 p-3.5 text-[12.5px] leading-snug text-[#FFD9A0]">
-          <AlertCircle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
-          A general mobility routine. If you are being treated, follow the exercises your physiotherapist gave you, and stop if anything increases your pain.
-        </p>
+      <TabTitle eyebrow="Appointment" title="Book your visit" />
+      <div className="mt-5 grid grid-cols-2 gap-3 px-4">
+        <a href={telHref} className="rounded-[22px] bg-[#2463EB] p-4 text-white">
+          <Phone size={20} aria-hidden="true" />
+          <span className="font-hero mt-3 block text-[15px] font-bold">Call now</span>
+          <span className="block text-[12px] text-white/75">{clinic.phone.display}</span>
+        </a>
+        <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="rounded-[22px] bg-[#25D366] p-4 text-white">
+          <MessageCircle size={20} aria-hidden="true" />
+          <span className="font-hero mt-3 block text-[15px] font-bold">WhatsApp</span>
+          <span className="block text-[12px] text-white/85">Chat with the clinic</span>
+        </a>
       </div>
+      <div className="mt-4 px-4">
+        <div className="rounded-[26px] bg-white p-5 shadow-[0_20px_40px_-24px_rgba(0,0,0,.6)]">
+          <h2 className="font-hero text-lg font-extrabold text-[#0E1E3D]">Request an appointment</h2>
+          <p className="mb-5 mt-1 text-[13.5px] text-[#3B4A63]">Takes less than a minute.</p>
+          <BookingForm formLabel="Appointment tab booking form" />
+        </div>
+      </div>
+      <section className="mt-7 px-4" aria-labelledby="first-visit">
+        <h2 id="first-visit" className="font-hero px-1 text-lg font-bold text-white">What happens next</h2>
+        <ol className="mt-3 space-y-2.5">
+          {firstVisit.map(({ icon: Icon, t, d }, i) => (
+            <li key={t} className="flex gap-3.5 rounded-[22px] border border-white/10 bg-white/[0.06] p-4">
+              <span className="font-hero grid size-10 shrink-0 place-items-center rounded-xl bg-white/10 text-[#8FB8FF]">
+                <Icon size={19} aria-hidden="true" />
+              </span>
+              <span>
+                <span className="font-hero block text-[15px] font-bold text-white">
+                  <span className="text-[#8FB8FF]">0{i + 1}</span> {t}
+                </span>
+                <span className="block text-[12.5px] leading-snug text-white/65">{d}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-4 flex items-center gap-2 px-1 text-[13px] text-white/60">
+          <Clock size={15} aria-hidden="true" /> Open {clinic.hours.summary} · bring any reports or scans
+        </p>
+      </section>
     </div>
   );
 }
@@ -529,7 +780,7 @@ function VisitTab({ onBook }: { onBook: () => void }) {
 const tabs: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: 'home', label: 'Home', icon: Home },
   { id: 'services', label: 'Services', icon: LayoutGrid },
-  { id: 'routine', label: 'Routine', icon: Dumbbell },
+  { id: 'appointment', label: 'Appointment', icon: CalendarCheck },
   { id: 'visit', label: 'Visit', icon: MapPin },
 ];
 
@@ -585,7 +836,7 @@ function AppShell({ framed }: { framed?: boolean }) {
               />
             )}
             {tab === 'services' && <ServicesTab focus={focus} onBook={(c) => setSheet({ open: true, preset: concerns.find((x) => c.toLowerCase().includes(x.split(' ')[0].toLowerCase())) ?? 'Other / not sure' })} />}
-            {tab === 'routine' && <RoutineTab />}
+            {tab === 'appointment' && <AppointmentTab />}
             {tab === 'visit' && <VisitTab onBook={() => setSheet({ open: true })} />}
           </motion.main>
         </AnimatePresence>
@@ -663,8 +914,8 @@ export default function AppPage() {
     };
   }, [phone]);
   useSeo({
-    title: 'Govind’s Physiotherapy App | Book, routines & clinic info',
-    description: 'The Govind’s Advanced Pain Management & Physiotherapy Centre app: book appointments on WhatsApp, explore services, follow a daily mobility routine and find the clinic. Add it to your home screen.',
+    title: 'Govind’s Physiotherapy App | Book appointments, videos & reviews',
+    description: 'The Govind’s Advanced Pain Management & Physiotherapy Centre app: book appointments on WhatsApp, explore services, watch patient stories and find the clinic. Add it to your home screen.',
     path: '/app',
     image: '/img/app-hero-1600.webp',
   });
@@ -701,10 +952,10 @@ export default function AppPage() {
               <span className="block font-extrabold">in your pocket.</span>
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-[#3B4A63]">
-              Book appointments in seconds, explore our services, follow a gentle daily routine and find us easily. No app store needed: add it straight to your home screen.
+              Book appointments in seconds, explore our services, watch real patient stories and find us easily. No app store needed: add it straight to your home screen.
             </p>
             <ul className="mt-8 grid max-w-md gap-3 sm:grid-cols-2">
-              {['Book on WhatsApp', 'Daily mobility routine', 'All our services', 'Call & directions'].map((f) => (
+              {['Book on WhatsApp', 'Patient videos & reviews', 'All our services', 'Call & directions'].map((f) => (
                 <li key={f} className="font-hero flex items-center gap-2.5 font-semibold text-[#0E1E3D]">
                   <CheckCircle2 size={19} className="text-[#2463EB]" aria-hidden="true" /> {f}
                 </li>
