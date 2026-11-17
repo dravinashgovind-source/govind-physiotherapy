@@ -1,6 +1,6 @@
 # Govind's Advanced Pain Management & Physiotherapy Centre: website
 
-React 19 · Vite · TypeScript · Tailwind CSS 4 · Framer Motion · GSAP ScrollTrigger (one pinned sequence) · Lucide.
+React 19 · Vite · TypeScript · Tailwind CSS 4 · Framer Motion · Lucide.
 
 ## Commands
 ```bash
@@ -9,7 +9,7 @@ npm run dev                                             # http://localhost:5173
 npm run build                                           # builds every route to static HTML + sitemap
 npm run preview
 npm run images                                          # re-generate AVIF/WebP from images/
-node scripts/qa-functional.mjs http://localhost:5173    # 33 interaction checks (needs Google Chrome)
+node scripts/qa-functional.mjs http://localhost:5173    # 38 interaction checks (needs Google Chrome)
 node scripts/qa-sections.mjs http://localhost:5173 ./shots 390 844   # section screenshots
 ```
 
