@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScro
 import { ArrowRight, Plus } from 'lucide-react';
 import manifest from '../content/image-manifest.json';
 import { conditions, type Callout, type Condition } from '../content/conditions';
+import { SectionHeading } from '../components/SectionHeading';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const ORANGE = '#F26A2E';
@@ -137,30 +138,84 @@ function BigWord({ word, cardW, cardH }: { word: string; cardW: number; cardH: n
 }
 
 export function Conditions() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [cardRef, card] = useSize<HTMLDivElement>();
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
   const n = conditions.length;
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
+  const { scrollYProgress } = useScroll({ target: trackRef, offset: ['start start', 'end end'] });
   useMotionValueEvent(scrollYProgress, 'change', (p) => setActive(Math.min(n - 1, Math.max(0, Math.floor(p * n * 0.999)))));
 
   const goTo = (i: number) => {
-    const el = sectionRef.current;
+    const el = trackRef.current;
     if (!el) return;
     const travel = el.offsetHeight - window.innerHeight;
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + (travel * (i + 0.5)) / n, behavior: reduce ? 'auto' : 'smooth' });
   };
+
+  // Phones & tablets: while the card is pinned, each swipe moves exactly one condition.
+  const activeRef = useRef(0);
+  activeRef.current = active;
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || !window.matchMedia('(max-width: 1023px)').matches || reduce) return;
+    let startY = 0;
+    let locked = false;
+    let busy = false;
+    const pinned = () => {
+      const r = track.getBoundingClientRect();
+      return r.top <= 2 && r.bottom >= window.innerHeight - 2;
+    };
+    const onStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+      locked = pinned();
+    };
+    const onMove = (e: TouchEvent) => {
+      if (!locked) return;
+      const dy = startY - e.touches[0].clientY; // > 0: swiping up (scrolling down)
+      const i = activeRef.current;
+      const canStep = (dy > 0 && i < n - 1) || (dy < 0 && i > 0);
+      if (canStep || busy) e.preventDefault();
+      else locked = false; // first/last card: let the page scroll on
+    };
+    const onEnd = (e: TouchEvent) => {
+      if (!locked || busy) return;
+      const dy = startY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) < 30) return;
+      const next = activeRef.current + (dy > 0 ? 1 : -1);
+      if (next < 0 || next >= n) return;
+      busy = true;
+      goTo(next);
+      window.setTimeout(() => (busy = false), 650);
+    };
+    track.addEventListener('touchstart', onStart, { passive: true });
+    track.addEventListener('touchmove', onMove, { passive: false });
+    track.addEventListener('touchend', onEnd, { passive: true });
+    return () => {
+      track.removeEventListener('touchstart', onStart);
+      track.removeEventListener('touchmove', onMove);
+      track.removeEventListener('touchend', onEnd);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [n, reduce]);
 
   const c = conditions[active];
   const compact = card.w < 760;
 
   return (
     <>
-      <section ref={sectionRef} id="conditions" aria-labelledby="conditions-title" className="relative bg-white" style={{ height: `${n * 85 + 15}vh` }}>
-        <h2 id="conditions-title" className="sr-only">
-          Where does it hurt? Common conditions we treat
-        </h2>
+      <section id="conditions" aria-labelledby="conditions-title" className="relative bg-white pt-20 md:pt-28">
+        <div className="mx-auto max-w-[1320px] px-4 md:px-6">
+          <SectionHeading
+            id="conditions-title"
+            eyebrow="Common conditions we treat"
+            light="Where does"
+            bold="it hurt?"
+            sub="Scroll through the most common problems we see, from neck to ankle, and how physiotherapy can help each one."
+          />
+        </div>
+        {/* Scroll track: the card stays pinned while each condition takes its turn */}
+        <div ref={trackRef} className="conditions-track relative" style={{ height: `${n * 85 + 15}vh` }}>
         <div className="sticky top-0 flex h-[100svh] items-center px-3 pb-4 pt-[92px] md:px-6 md:pt-[100px]">
 
           <div
@@ -177,9 +232,9 @@ export function Conditions() {
               </div>
               <div className="hidden items-center gap-4 md:flex" aria-hidden="true">
                 <span className="font-hero text-[10px] font-bold uppercase leading-tight tracking-[0.12em] text-[#55555B]">
-                  Where does
+                  Neck to
                   <br />
-                  <span style={{ color: ORANGE }}>it hurt?</span>
+                  <span style={{ color: ORANGE }}>ankle</span>
                 </span>
                 <span className="flex items-end gap-[14px]">
                   {Array.from({ length: 16 }).map((_, i) => (
@@ -267,6 +322,7 @@ export function Conditions() {
               ))}
             </nav>
           </div>
+        </div>
         </div>
       </section>
 

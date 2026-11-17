@@ -6,7 +6,7 @@ const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
 const errors = [];
 p.on('pageerror', (e) => errors.push(e.message));
 await p.goto(url, { waitUntil: 'networkidle' });
-const { top, h } = await p.evaluate(() => { const s = document.getElementById('conditions'); return { top: s.getBoundingClientRect().top + scrollY, h: s.offsetHeight }; });
+const { top, h } = await p.evaluate(() => { const s = document.querySelector('.conditions-track'); return { top: s.getBoundingClientRect().top + scrollY, h: s.offsetHeight }; });
 const travel = h - 900;
 for (let i = 0; i < 5; i++) {
   await p.evaluate((y) => window.scrollTo(0, y), top + (travel * (i + 0.5)) / 5);
