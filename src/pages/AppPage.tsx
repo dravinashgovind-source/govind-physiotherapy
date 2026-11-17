@@ -188,10 +188,19 @@ function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: 
   return (
     <div className="pb-6">
       {/* Hero */}
-      <section className="relative min-h-[440px] overflow-hidden">
-        <motion.div className="absolute -right-20 top-0 h-[460px] w-[330px]" initial={reduce ? false : { opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.1, ease }}>
-          <Photo name="app-hero" widths={[800, 1600]} priority sizes="330px" alt="A translucent anatomical figure running, with glowing joints." imgClassName="h-full w-full object-cover object-[60%_center]" />
-          <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${NAVY} 0%, transparent 38%), linear-gradient(0deg, ${NAVY} 0%, transparent 25%)` }} aria-hidden="true" />
+      <section className="relative min-h-[440px]">
+        <motion.div
+          className="pointer-events-none absolute -right-16 -top-4 h-[480px] w-[340px]"
+          style={{
+            // Feather every edge to transparent so the graphic blends into the app background with no visible frame.
+            WebkitMaskImage: 'radial-gradient(ellipse 62% 58% at 58% 46%, #000 52%, rgba(0,0,0,.6) 68%, transparent 84%)',
+            maskImage: 'radial-gradient(ellipse 62% 58% at 58% 46%, #000 52%, rgba(0,0,0,.6) 68%, transparent 84%)',
+          }}
+          initial={reduce ? false : { opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.1, ease }}
+        >
+          <Photo name="app-hero" widths={[800, 1600]} priority sizes="340px" alt="A translucent anatomical figure running, with glowing joints." imgClassName="h-full w-full object-cover object-[60%_center]" />
         </motion.div>
         <div className="relative px-5 pt-8">
           <motion.h1 className="font-hero text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] [text-shadow:0_2px_18px_rgba(11,30,74,.6)]" initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease }}>
@@ -233,19 +242,21 @@ function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: 
               </li>
             ))}
           </ul>
-          <button type="button" onClick={() => onTab('services')} className="mt-4 flex w-full items-center overflow-hidden rounded-[20px] bg-gradient-to-r from-[#E8F0FF] to-[#CFE0FF] text-left">
-            <span className="flex-1 py-4 pl-4 pr-2">
+          <button type="button" onClick={() => onTab('services')} className="mt-4 flex w-full items-center gap-3 rounded-[22px] bg-gradient-to-r from-[#EEF4FF] to-[#D6E5FF] p-2 text-left shadow-[0_10px_24px_-14px_rgba(0,0,0,.5)] active:scale-[.99]">
+            <span className="min-w-0 flex-1 py-2 pl-3">
               <span className="font-hero block text-[17px] font-extrabold leading-tight text-[#0E1E3D]">
                 Your Recovery
                 <br />
                 Our Priority
               </span>
-              <span className="mt-1 block text-[12.5px] text-[#3B4A63]">Expert care. Advanced therapy.</span>
+              <span className="mt-1.5 block text-[12.5px] leading-snug text-[#3B4A63]">Expert care. Advanced therapy.</span>
             </span>
-            <span className="mr-2 grid size-9 shrink-0 place-items-center rounded-full bg-[#0E1E3D] text-white">
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#0E1E3D] text-white">
               <ChevronRight size={18} aria-hidden="true" />
             </span>
-            <Photo name="svc-spine" sizes="140px" alt="" imgClassName="h-[104px] w-[130px] object-cover" />
+            <span className="block h-[96px] w-[118px] shrink-0 overflow-hidden rounded-[16px]">
+              <Photo name="svc-spine" sizes="130px" alt="" imgClassName="h-full w-full object-cover object-[35%_center]" />
+            </span>
           </button>
         </Glass>
       </div>
@@ -531,18 +542,20 @@ function AppShell({ framed }: { framed?: boolean }) {
   const [sheet, setSheet] = useState<{ open: boolean; preset?: string }>({ open: false });
   const scroller = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const [scrolled, setScrolled] = useState(false);
 
   const go = (t: Tab) => {
     setTab(t);
     if (t !== 'services') setFocus(null);
     history.replaceState(null, '', t === 'home' ? '/app' : `/app#${t}`);
     scroller.current?.scrollTo({ top: 0 });
+    setScrolled(false);
   };
 
   return (
     <div className="relative h-full w-full overflow-hidden text-white" style={{ background: `radial-gradient(120% 60% at 80% 0%, #17336F 0%, ${NAVY} 45%, #081536 100%)` }}>
       {/* App bar */}
-      <header className={`absolute inset-x-0 top-0 z-30 flex items-center justify-between px-5 pb-3 ${framed ? 'pt-12' : 'pt-[max(14px,env(safe-area-inset-top))]'}`} style={{ background: `linear-gradient(${NAVY} 60%, transparent)` }}>
+      <header className={`absolute inset-x-0 top-0 z-30 flex items-center justify-between px-5 pb-3 ${framed ? 'pt-12' : 'pt-[max(14px,env(safe-area-inset-top))]'}`} style={{ background: scrolled ? 'rgba(11,30,74,.82)' : 'transparent', backdropFilter: scrolled ? 'blur(14px)' : 'none', WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'none', transition: 'background .3s' }}>
         <Link to="/" className="flex items-center gap-2.5" aria-label={`${clinic.name}, website home`}>
           <span className="grid size-10 place-items-center rounded-xl bg-white">
             <img src="/img/logo-mark-104.png" alt="" width={44} height={38} className="h-7 w-auto" />
@@ -558,7 +571,7 @@ function AppShell({ framed }: { framed?: boolean }) {
       </header>
 
       {/* Scrolling content */}
-      <div ref={scroller} className={`absolute inset-0 overflow-y-auto overscroll-contain pb-28 ${framed ? 'pt-[106px]' : 'pt-[calc(72px+env(safe-area-inset-top))]'} [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}>
+      <div ref={scroller} onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 8)} className={`absolute inset-0 overflow-x-hidden overflow-y-auto overscroll-contain pb-28 ${framed ? 'pt-[106px]' : 'pt-[calc(72px+env(safe-area-inset-top))]'} [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.main key={tab} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0 }} transition={{ duration: 0.25 }}>
             {tab === 'home' && (
