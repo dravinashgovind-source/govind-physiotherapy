@@ -1,0 +1,25 @@
+# dependencies & build
+node_modules
+dist
+tsconfig.tsbuildinfo
+*.local
+.DS_Store
+
+# Reference mockups and unused drafts (kept locally, not needed to build the site)
+images/*.pdf
+images/*Physiotherapy*.png
+images/Pastel*.png
+images/thumbnail_*.webp
+images/2c579a6b-*.png
+images/574b7ad4-*.png
+images/6ed268bf-*.png
+images/Gemini_Generated_Image_1voc*
+images/Gemini_Generated_Image_ipso*
+images/Gemini_Generated_Image_liatz*
+images/Gemini_Generated_Image_nlsk*
+images/Gemini_Generated_Image_sq7u*
+images/Gemini_Generated_Image_ujnn*
+images/openart/hero-a.png
+images/openart/hero-b.png
+images/openart/hero-4k-nbpro.png
+images/openart/hero-4k-gpt.png

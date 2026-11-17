@@ -1,0 +1,130 @@
+{
+  "dr-avinash-govind": {
+    "width": 1536,
+    "height": 1024
+  },
+  "hero-care": {
+    "width": 3584,
+    "height": 2016
+  },
+  "back": {
+    "width": 2400,
+    "height": 1613
+  },
+  "neck": {
+    "width": 2400,
+    "height": 1613
+  },
+  "ankle": {
+    "width": 2400,
+    "height": 1613
+  },
+  "shoulder": {
+    "width": 2400,
+    "height": 1613
+  },
+  "knee": {
+    "width": 2400,
+    "height": 1613
+  },
+  "approach-assess": {
+    "width": 1344,
+    "height": 1680
+  },
+  "corp-desk": {
+    "width": 1792,
+    "height": 1344
+  },
+  "corp-hero": {
+    "width": 2304,
+    "height": 1296
+  },
+  "svc-neuro": {
+    "width": 1792,
+    "height": 1344
+  },
+  "svc-paeds": {
+    "width": 1792,
+    "height": 1344
+  },
+  "svc-pain": {
+    "width": 1792,
+    "height": 1344
+  },
+  "svc-postop": {
+    "width": 1792,
+    "height": 1344
+  },
+  "svc-senior": {
+    "width": 1792,
+    "height": 1344
+  },
+  "svc-spine": {
+    "width": 1792,
+    "height": 1344
+  },
+  "svc-sports": {
+    "width": 1792,
+    "height": 1344
+  },
+  "svc-women": {
+    "width": 1792,
+    "height": 1344
+  },
+  "clinic-consultation": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-entrance-open": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-entrance-wide": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-entrance": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-reception": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-signage": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-therapy-hall": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-treatment": {
+    "width": 1280,
+    "height": 960
+  },
+  "clinic-waiting": {
+    "width": 1280,
+    "height": 960
+  },
+  "cut-neck": {
+    "width": 668,
+    "height": 2072
+  },
+  "cut-shoulder": {
+    "width": 616,
+    "height": 2070
+  },
+  "cut-back": {
+    "width": 580,
+    "height": 2198
+  },
+  "cut-knee": {
+    "width": 1077,
+    "height": 1979
+  },
+  "cut-ankle": {
+    "width": 1536,
+    "height": 1080
+  }
+}
