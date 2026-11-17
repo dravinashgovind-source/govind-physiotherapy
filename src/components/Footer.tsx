@@ -14,6 +14,7 @@ const quickLinks = [
   { to: '/corporate', label: 'Corporate Wellness' },
   { to: '/#patients', label: 'Reviews' },
   { to: '/#faq', label: 'FAQ' },
+  { to: '/app', label: 'Get the App' },
 ];
 
 function Heading({ children }: { children: string }) {

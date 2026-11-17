@@ -8,6 +8,7 @@ import Home from './pages/Home';
 const Service = lazy(() => import('./pages/Service'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Corporate = lazy(() => import('./pages/Corporate'));
+const AppPage = lazy(() => import('./pages/AppPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 /** Scrolls to #hash targets after navigation, or to the top for new pages. */
@@ -42,10 +43,15 @@ function PageLoading() {
 }
 
 export default function App() {
+  // On /app, phones get a full-screen app: hide the website header, footer and quick-contact bar there.
+  const { pathname } = useLocation();
+  const siteChrome = pathname === '/app' ? 'max-md:hidden' : 'contents';
   return (
     <>
       <ScrollManager />
-      <Nav />
+      <div className={siteChrome}>
+        <Nav />
+      </div>
       <main id="main">
         <Suspense fallback={<PageLoading />}>
           <Routes>
@@ -53,12 +59,15 @@ export default function App() {
             <Route path="/services/:slug" element={<Service />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/corporate" element={<Corporate />} />
+            <Route path="/app" element={<AppPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
-      <Footer />
-      <MobileActionBar />
+      <div className={siteChrome}>
+        <Footer />
+        <MobileActionBar />
+      </div>
     </>
   );
 }

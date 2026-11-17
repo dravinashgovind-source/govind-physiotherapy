@@ -27,6 +27,26 @@
     "width": 2400,
     "height": 1613
   },
+  "app-back": {
+    "width": 1360,
+    "height": 1360
+  },
+  "app-hero": {
+    "width": 1344,
+    "height": 1792
+  },
+  "app-knee": {
+    "width": 1360,
+    "height": 1360
+  },
+  "app-neck": {
+    "width": 1360,
+    "height": 1360
+  },
+  "app-shoulder": {
+    "width": 1360,
+    "height": 1360
+  },
   "approach-assess": {
     "width": 1344,
     "height": 1680

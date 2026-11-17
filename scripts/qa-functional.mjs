@@ -147,6 +147,33 @@ async function newPage(opts = {}) {
   await ctx.close();
 }
 
+// ---- App page (phone)
+{
+  const { ctx, page } = await newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  await page.goto(base + '/app', { waitUntil: 'networkidle' });
+  check('App: hero renders', (await page.locator('h1').count()) === 1 && (await page.getByText('Live Better.', { exact: true }).isVisible()));
+  check('App: site header hidden', !(await page.locator('header nav[aria-label="Main"]').isVisible()));
+  await page.getByRole('button', { name: 'Pain Relief' }).click();
+  await page.waitForTimeout(700);
+  check('App: quick action opens Services', (await page.getByText('How we can help').count()) === 1);
+  await page.getByRole('button', { name: 'Routine', exact: true }).click();
+  await page.waitForTimeout(500);
+  await page.getByRole('checkbox').first().click();
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'Routine', exact: true }).click();
+  await page.waitForTimeout(500);
+  check('App: routine progress saved', (await page.getByRole('checkbox').first().getAttribute('aria-checked')) === 'true');
+  await page.getByRole('button', { name: 'Home', exact: true }).click();
+  await page.getByRole('button', { name: /Book Appointment/ }).click();
+  await page.waitForTimeout(600);
+  const sheet = page.getByRole('form', { name: 'App booking form' });
+  await sheet.getByRole('button', { name: /Send via WhatsApp/ }).click();
+  check('App: booking validates', (await sheet.locator('[aria-invalid="true"]').count()) === 3);
+  const manifest = await page.evaluate(() => fetch('/manifest.webmanifest').then((r) => r.json()));
+  check('App: web manifest', manifest.start_url === '/app' && manifest.icons.length === 3);
+  await ctx.close();
+}
+
 console.log(results.join('\n'));
 console.log('Console/page errors:', errors.length ? errors : 'none');
 await browser.close();

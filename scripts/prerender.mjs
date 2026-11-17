@@ -39,6 +39,12 @@ const pages = [
     description: 'On-site physiotherapy camps, ergonomic assessments and back-care workshops for companies in Pune, by Govind’s Advanced Pain Management & Physiotherapy Centre, Kondhwa.',
     image: '/img/corp-hero-1600.webp',
   },
+  {
+    path: '/app',
+    title: 'Govind’s Physiotherapy App | Book, routines & clinic info',
+    description: 'Book appointments on WhatsApp, explore services, follow a daily mobility routine and find the clinic. Add the Govind’s app to your home screen.',
+    image: '/img/app-hero-1600.webp',
+  },
   { path: '/privacy', title: `Privacy | ${BRAND}`, description: `How ${BRAND} handles information you share through this website.` },
   ...regionMeta,
 ];
