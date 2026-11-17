@@ -22,11 +22,11 @@ function Heading({ children }: { children: string }) {
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#F4F7FC] pt-20">
+    <footer className="relative overflow-hidden bg-[#F4F7FC] pb-20 pt-16 md:pt-20 lg:pb-0">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-12">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-12">
           {/* Brand */}
-          <div className="lg:col-span-4">
+          <div className="col-span-2 lg:col-span-4">
             <Logo full />
             <p className="mt-6 max-w-sm leading-relaxed text-[#3B4A63]">
               Assessment-based physiotherapy and non-surgical pain management in Kondhwa, Pune. Helping you move better and live better.
@@ -58,10 +58,10 @@ export function Footer() {
           {/* Quick links */}
           <nav aria-label="Footer" className="lg:col-span-2">
             <Heading>Explore</Heading>
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-3 md:mt-5 md:space-y-3">
               {quickLinks.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-[#0E1E3D] transition-colors hover:text-[#1D4FD8]">
+                  <Link to={l.to} className="inline-block py-2.5 text-[#0E1E3D] transition-colors hover:text-[#1D4FD8] md:py-0">
                     {l.label}
                   </Link>
                 </li>
@@ -72,10 +72,10 @@ export function Footer() {
           {/* Treatments */}
           <nav aria-label="Physiotherapy for" className="lg:col-span-2">
             <Heading>Pain we treat</Heading>
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-3 md:mt-5 md:space-y-3">
               {regions.map((r) => (
                 <li key={r.id}>
-                  <Link to={`/services/${r.slug}`} className="text-[#0E1E3D] transition-colors hover:text-[#1D4FD8]">
+                  <Link to={`/services/${r.slug}`} className="inline-block py-2.5 text-[#0E1E3D] transition-colors hover:text-[#1D4FD8] md:py-0">
                     {r.label} pain
                   </Link>
                 </li>
@@ -84,7 +84,7 @@ export function Footer() {
           </nav>
 
           {/* Contact */}
-          <div className="lg:col-span-4">
+          <div className="col-span-2 lg:col-span-4">
             <Heading>Visit or call</Heading>
             <ul className="mt-5 space-y-4">
               <li className="flex gap-3">
@@ -93,7 +93,7 @@ export function Footer() {
               </li>
               <li className="flex gap-3">
                 <Phone size={19} className="mt-0.5 shrink-0 text-[#2463EB]" aria-hidden="true" />
-                <a href={telHref} className="font-hero font-bold text-[#0E1E3D] hover:text-[#1D4FD8]">
+                <a href={telHref} className="font-hero inline-block py-2 font-bold text-[#0E1E3D] hover:text-[#1D4FD8] md:py-0">
                   {clinic.phone.display}
                 </a>
               </li>
@@ -119,7 +119,7 @@ export function Footer() {
         <div className="mt-16 flex flex-col gap-3 border-t border-[#DCE4F2] py-7 text-sm text-[#3B4A63]/80 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} {clinic.name}. All rights reserved.</p>
           <p className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/privacy" className="hover:text-[#0E1E3D]">Privacy</Link>
+            <Link to="/privacy" className="inline-block py-2 hover:text-[#0E1E3D] md:py-0">Privacy</Link>
             <span>Information on this site is general and not a diagnosis.</span>
           </p>
         </div>

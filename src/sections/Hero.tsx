@@ -87,7 +87,7 @@ export function Hero() {
               Book Appointment
               <ArrowRight size={22} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
-            <a href={telHref} className="inline-flex items-center gap-2 font-medium text-[#0E1E3D]/80 hover:text-[#0E1E3D]">
+            <a href={telHref} className="inline-flex min-h-12 items-center gap-2 font-medium text-[#0E1E3D]/80 hover:text-[#0E1E3D]">
               <Phone size={17} aria-hidden="true" /> {clinic.phone.display}
             </a>
           </motion.div>

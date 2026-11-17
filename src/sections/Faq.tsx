@@ -54,7 +54,7 @@ function Item({ q, a, open, onToggle }: { q: string; a: string; open: boolean; o
 export function Faq() {
   const [open, setOpen] = useState(0);
   return (
-    <section id="faq" aria-labelledby="faq-title" className="bg-white py-24 md:py-32">
+    <section id="faq" aria-labelledby="faq-title" className="bg-white py-16 md:py-32">
       <div className="mx-auto grid max-w-[1320px] gap-12 px-4 md:px-6 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">

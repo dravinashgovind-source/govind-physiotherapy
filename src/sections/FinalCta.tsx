@@ -157,7 +157,7 @@ function BookingForm() {
       </div>
       <div className="sm:col-span-2">
         <label className="flex cursor-pointer items-start gap-3 text-sm text-[#3B4A63]">
-          <input type="checkbox" name="consent" checked={f.consent} onChange={(e) => set('consent', e.target.checked)} className="mt-0.5 size-4 accent-[#2463EB]" {...aria('consent')} />
+          <input type="checkbox" name="consent" checked={f.consent} onChange={(e) => set('consent', e.target.checked)} className="mt-0.5 size-5 shrink-0 accent-[#2463EB]" {...aria('consent')} />
           <span>
             I agree to be contacted about this enquiry. See our <Link to="/privacy" className="font-semibold text-[#1D4FD8] underline-offset-4 hover:underline">privacy note</Link>.
           </span>
@@ -177,7 +177,7 @@ function BookingForm() {
 
 export function FinalCta() {
   return (
-    <section id="book" aria-labelledby="book-title" className="bg-white pb-24 pt-8 md:pb-32">
+    <section id="book" aria-labelledby="book-title" className="bg-white pb-16 pt-4 md:pb-32 md:pt-8">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <Reveal>
           <div className="grid overflow-hidden rounded-[36px] bg-[#0E1E3D] shadow-[0_40px_90px_-50px_rgba(14,30,61,.8)] lg:grid-cols-12">

@@ -87,7 +87,7 @@ function VideoRow({ v }: { v: Video }) {
 export function Videos() {
   const [featured, ...rest] = videos;
   return (
-    <section id="videos" aria-labelledby="videos-title" className="bg-[#F4F7FC] py-24 md:py-32">
+    <section id="videos" aria-labelledby="videos-title" className="bg-[#F4F7FC] py-16 md:py-32">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>

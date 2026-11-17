@@ -7,7 +7,7 @@ import { moreServices, services, type Service } from '../content/services';
 
 function ServiceCard({ s, big }: { s: Service; big?: boolean }) {
   return (
-    <article className="group relative h-full min-h-[460px] md:min-h-[380px] overflow-hidden rounded-[28px] bg-[#0E1E3D] shadow-[0_24px_50px_-34px_rgba(14,30,61,.6)]">
+    <article className="group relative h-full min-h-[440px] md:min-h-[380px] overflow-hidden rounded-[28px] bg-[#0E1E3D] shadow-[0_24px_50px_-34px_rgba(14,30,61,.6)]">
       <Photo
         name={s.image}
         alt={s.imageAlt}
@@ -49,7 +49,7 @@ function ServiceCard({ s, big }: { s: Service; big?: boolean }) {
 export function Services() {
   const [first, ...rest] = services;
   return (
-    <section id="services" aria-labelledby="services-title" className="bg-white py-24 md:py-32">
+    <section id="services" aria-labelledby="services-title" className="bg-white py-16 md:py-32">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <SectionHeading
           id="services-title"
@@ -64,12 +64,15 @@ export function Services() {
           }
         />
 
-        <div className="mt-14 grid auto-rows-[minmax(380px,auto)] gap-5 md:grid-cols-2 xl:grid-cols-4">
-          <Reveal className="md:col-span-2 md:row-span-2">
+        <p className="font-hero mt-4 flex items-center gap-2 text-sm font-semibold text-[#3B4A63] md:hidden" aria-hidden="true">
+          Swipe to see all 8 services <span className="inline-block animate-[nudge_1.6s_ease-in-out_infinite] motion-reduce:animate-none">→</span>
+        </p>
+        <div className="-mx-4 mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [scrollbar-width:none] md:mx-0 md:mt-14 md:grid md:auto-rows-[minmax(380px,auto)] md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-4 [&::-webkit-scrollbar]:hidden">
+          <Reveal className="w-[84%] shrink-0 snap-start md:col-span-2 md:row-span-2 md:w-auto">
             <ServiceCard s={first} big />
           </Reveal>
           {rest.map((s, i) => (
-            <Reveal key={s.id} delay={(i % 4) * 0.06} className={i === 2 ? 'md:col-span-2 xl:col-span-2' : ''}>
+            <Reveal key={s.id} delay={(i % 4) * 0.06} className={`w-[84%] shrink-0 snap-start md:w-auto ${i === 2 ? 'md:col-span-2 xl:col-span-2' : ''}`}>
               <ServiceCard s={s} big={i === 2} />
             </Reveal>
           ))}

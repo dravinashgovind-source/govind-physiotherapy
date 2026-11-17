@@ -16,8 +16,8 @@ export function Logo({ tone = 'dark', full }: { tone?: 'dark' | 'light'; full?: 
   return (
     <span className="flex items-center gap-2.5">
       <picture className="shrink-0">
-        <source type="image/webp" srcSet="/img/logo-mark.webp" />
-        <img src="/img/logo-mark.png" alt="" width={294} height={256} className="h-11 w-auto md:h-12" />
+        <source type="image/webp" srcSet="/img/logo-mark-104.webp 2x, /img/logo-mark.webp 3x" />
+        <img src="/img/logo-mark-104.png" alt="" width={294} height={256} className="h-11 w-auto md:h-12" />
       </picture>
       <span className="leading-none">
         <span className="font-brand block text-[21px] font-bold tracking-[0.02em] md:text-[23px]" style={{ color: ink }}>

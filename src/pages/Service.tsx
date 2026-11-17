@@ -81,9 +81,9 @@ export default function Service() {
         <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-4 md:px-6 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <motion.nav {...rise(0)} aria-label="Breadcrumb" className="font-hero flex items-center gap-1.5 text-sm text-[#3B4A63]">
-              <Link to="/" className="hover:text-[#1D4FD8]">Home</Link>
+              <Link to="/" className="inline-block py-2.5 hover:text-[#1D4FD8]">Home</Link>
               <ChevronRight size={14} aria-hidden="true" />
-              <Link to="/#services" className="hover:text-[#1D4FD8]">Services</Link>
+              <Link to="/#services" className="inline-block py-2.5 hover:text-[#1D4FD8]">Services</Link>
               <ChevronRight size={14} aria-hidden="true" />
               <span aria-current="page" className="font-semibold text-[#0E1E3D]">{region.label} pain</span>
             </motion.nav>
@@ -123,7 +123,7 @@ export default function Service() {
       </header>
 
       {/* Difficulties + assessment */}
-      <section aria-labelledby="sv-signs" className="bg-[#F4F7FC] py-24 md:py-28">
+      <section aria-labelledby="sv-signs" className="bg-[#F4F7FC] py-16 md:py-28">
         <div className="mx-auto max-w-[1320px] px-4 md:px-6">
           <SectionHeading id="sv-signs" eyebrow="Sound familiar?" light="Everyday movements" bold="people find difficult." />
           <div className="mt-12 grid gap-5 lg:grid-cols-12">
@@ -160,7 +160,7 @@ export default function Service() {
       </section>
 
       {/* Treatment */}
-      <section aria-labelledby="sv-care" className="bg-white py-24 md:py-28">
+      <section aria-labelledby="sv-care" className="bg-white py-16 md:py-28">
         <div className="mx-auto grid max-w-[1320px] gap-12 px-4 md:px-6 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <SectionHeading id="sv-care" eyebrow="How we help" light="Your personalised" bold="treatment plan." sub="After the assessment, your plan may include some of the following, chosen for your condition, goals and pace." />

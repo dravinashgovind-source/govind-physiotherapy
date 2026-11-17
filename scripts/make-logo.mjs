@@ -20,6 +20,9 @@ const meta = await sharp(SRC).metadata();
 console.log(meta.width, meta.height);
 // Emblem only (figure + spine + leaves)
 await toTransparent({ left: 440, top: 20, width: 660, height: 545 }, 'logo-mark', 256);
+// Small header size (2× the 48px display height)
+await sharp('public/img/logo-mark.png').resize({ height: 104 }).webp({ quality: 92, alphaQuality: 100 }).toFile('public/img/logo-mark-104.webp');
+await sharp('public/img/logo-mark.png').resize({ height: 104 }).png({ compressionLevel: 9 }).toFile('public/img/logo-mark-104.png');
 // Full lockup
 await toTransparent({ left: 0, top: 0, width: meta.width, height: meta.height }, 'logo-full', 480);
 // Favicon (emblem on white rounded square)

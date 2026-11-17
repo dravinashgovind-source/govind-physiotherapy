@@ -8,7 +8,7 @@ const points = ['On-site physiotherapy camps', 'Ergonomic workstation checks', '
 
 export function CorporateTeaser() {
   return (
-    <section id="corporate" aria-labelledby="corporate-title" className="bg-white py-24 md:py-28">
+    <section id="corporate" aria-labelledby="corporate-title" className="bg-white py-16 md:py-28">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <Reveal>
           <div className="grid overflow-hidden rounded-[36px] bg-gradient-to-br from-[#EEF3FD] via-[#F4F7FC] to-[#EAF6F5] lg:grid-cols-2">

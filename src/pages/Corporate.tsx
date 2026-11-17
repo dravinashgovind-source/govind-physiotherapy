@@ -229,7 +229,7 @@ export default function Corporate() {
       </section>
 
       {/* Why */}
-      <section aria-labelledby="corp-why" className="bg-[#F4F7FC] py-24 md:py-28">
+      <section aria-labelledby="corp-why" className="bg-[#F4F7FC] py-16 md:py-28">
         <div className="mx-auto max-w-[1320px] px-4 md:px-6">
           <SectionHeading id="corp-why" eyebrow="Why it matters" light="Work shouldn’t" bold="hurt." sub="Many of the back, neck and wrist problems we treat start at a desk. A little prevention at work goes a long way." />
           <div className="mt-12 grid gap-4 md:grid-cols-3">
@@ -247,7 +247,7 @@ export default function Corporate() {
       </section>
 
       {/* Programmes */}
-      <section id="programmes" aria-labelledby="corp-prog" className="bg-white py-24 md:py-32">
+      <section id="programmes" aria-labelledby="corp-prog" className="bg-white py-16 md:py-32">
         <div className="mx-auto grid max-w-[1320px] gap-12 px-4 md:px-6 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-28">
@@ -281,7 +281,7 @@ export default function Corporate() {
       </section>
 
       {/* How it works + benefits */}
-      <section aria-labelledby="corp-how" className="relative overflow-hidden bg-[#0E1E3D] py-24 md:py-32">
+      <section aria-labelledby="corp-how" className="relative overflow-hidden bg-[#0E1E3D] py-16 md:py-32">
         <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 size-[620px] rounded-full bg-[#2463EB]/25 blur-[120px]" />
         <div className="relative mx-auto max-w-[1320px] px-4 md:px-6">
           <SectionHeading dark id="corp-how" eyebrow="How it works" light="Simple to start," bold="easy to run." />
@@ -318,13 +318,13 @@ export default function Corporate() {
       </section>
 
       {/* Enquiry */}
-      <section id="corp-enquiry" aria-labelledby="corp-enq" className="bg-[#F4F7FC] py-24 md:py-32">
+      <section id="corp-enquiry" aria-labelledby="corp-enq" className="bg-[#F4F7FC] py-16 md:py-32">
         <div className="mx-auto grid max-w-[1320px] gap-12 px-4 md:px-6 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <SectionHeading id="corp-enq" eyebrow="Get in touch" light="Let’s plan your" bold="team’s programme." sub="Tell us a little about your company. We’ll get back to you to discuss dates, formats and pricing." />
             <Reveal className="mt-8 rounded-[24px] bg-white p-6 shadow-sm">
               <p className="font-hero font-bold text-[#0E1E3D]">Prefer to talk?</p>
-              <a href={`tel:${clinic.phone.e164}`} className="font-hero mt-1 block text-2xl font-extrabold text-[#1D4FD8]">
+              <a href={`tel:${clinic.phone.e164}`} className="font-hero mt-1 inline-block py-2 text-2xl font-extrabold text-[#1D4FD8]">
                 {clinic.phone.display}
               </a>
               <p className="mt-2 text-sm text-[#3B4A63]">{clinic.name}, Tilekar Nagar, Kondhwa, Pune</p>

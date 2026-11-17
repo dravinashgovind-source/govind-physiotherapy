@@ -8,7 +8,7 @@ function MapEmbed() {
   // Loads Google Maps only on request: faster page and no third-party cookies before the visitor chooses.
   const [show, setShow] = useState(false);
   return (
-    <div className="relative h-full min-h-[380px] overflow-hidden rounded-[28px] bg-[#E9EEF6]">
+    <div className="relative h-full min-h-[240px] overflow-hidden md:min-h-[380px] rounded-[28px] bg-[#E9EEF6]">
       {show ? (
         <iframe title="Map showing Govind’s Physiotherapy in Tilekar Nagar, Kondhwa" src={clinic.mapsEmbed} className="absolute inset-0 h-full w-full border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
       ) : (
@@ -42,7 +42,7 @@ export function Clinic() {
     ...(clinic.wheelchairAccessible ? [{ icon: Accessibility, title: 'Access', body: 'Wheelchair-accessible entrance' }] : []),
   ];
   return (
-    <section id="clinic" aria-labelledby="clinic-title" className="bg-[#F4F7FC] py-24 md:py-32">
+    <section id="clinic" aria-labelledby="clinic-title" className="bg-[#F4F7FC] py-16 md:py-32">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <SectionHeading id="clinic-title" eyebrow="Visit us" light="Find us in" bold="Kondhwa, Pune." sub="Near ISKCON NVCC Road, next to Gagan Unnati, Tilekar Nagar." />
         <div className="mt-12 grid gap-5 lg:grid-cols-12">
@@ -57,7 +57,7 @@ export function Clinic() {
                     <span>
                       <span className="font-hero block text-xs font-bold uppercase tracking-[0.12em] text-[#3B4A63]/70">{title}</span>
                       {href ? (
-                        <a href={href} className="font-hero mt-0.5 block text-lg font-bold text-[#0E1E3D] hover:text-[#1D4FD8]">
+                        <a href={href} className="font-hero mt-0.5 inline-block py-1.5 text-lg font-bold text-[#0E1E3D] hover:text-[#1D4FD8]">
                           {body}
                         </a>
                       ) : (

@@ -18,7 +18,7 @@ const principles = [
 export function Doctor() {
   const d = clinic.doctor;
   return (
-    <section id="doctor" aria-labelledby="doctor-title" className="relative overflow-hidden bg-white py-24 md:py-32">
+    <section id="doctor" aria-labelledby="doctor-title" className="relative overflow-hidden bg-white py-16 md:py-32">
       <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-20 size-[520px] rounded-full bg-[#EEF3FD] blur-3xl" />
       <div className="relative mx-auto grid max-w-[1320px] items-center gap-14 px-4 md:px-6 lg:grid-cols-12 lg:gap-16">
         {/* Photo */}

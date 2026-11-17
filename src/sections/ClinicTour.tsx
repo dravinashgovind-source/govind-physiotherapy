@@ -80,7 +80,7 @@ export function ClinicTour() {
   const nav = useCallback((d: 1 | -1) => setOpen((i) => (i === null ? i : (i + d + photos.length) % photos.length)), []);
 
   return (
-    <section id="tour" aria-labelledby="tour-title" className="bg-white py-24 md:py-32">
+    <section id="tour" aria-labelledby="tour-title" className="bg-white py-16 md:py-32">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <SectionHeading
           id="tour-title"

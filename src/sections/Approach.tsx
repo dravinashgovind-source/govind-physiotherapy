@@ -42,7 +42,7 @@ export function Approach() {
   const { scrollYProgress } = useScroll({ target: listRef, offset: ['start 70%', 'end 60%'] });
 
   return (
-    <section id="approach" aria-labelledby="approach-title" className="bg-[#F4F7FC] py-24 md:py-32">
+    <section id="approach" aria-labelledby="approach-title" className="bg-[#F4F7FC] py-16 md:py-32">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <SectionHeading
           id="approach-title"

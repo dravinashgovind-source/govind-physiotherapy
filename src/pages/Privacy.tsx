@@ -38,7 +38,7 @@ export default function Privacy() {
         <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-10 size-[520px] rounded-full bg-[#EEF3FD] blur-3xl" />
         <div className="relative mx-auto max-w-[920px] px-4 md:px-6">
           <nav aria-label="Breadcrumb" className="font-hero flex items-center gap-1.5 text-sm text-[#3B4A63]">
-            <Link to="/" className="hover:text-[#1D4FD8]">Home</Link>
+            <Link to="/" className="inline-block py-2.5 hover:text-[#1D4FD8]">Home</Link>
             <ChevronRight size={14} aria-hidden="true" />
             <span aria-current="page" className="font-semibold text-[#0E1E3D]">Privacy</span>
           </nav>

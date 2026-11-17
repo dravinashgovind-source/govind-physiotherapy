@@ -32,13 +32,13 @@ export default function NotFound() {
           <ul className="mt-4 flex flex-wrap justify-center gap-2">
             {regions.map((r) => (
               <li key={r.id}>
-                <Link to={`/services/${r.slug}`} className="font-hero inline-block rounded-full bg-[#F4F7FC] px-4 py-2 text-sm font-medium text-[#0E1E3D] hover:bg-[#2463EB] hover:text-white">
+                <Link to={`/services/${r.slug}`} className="font-hero inline-block rounded-full bg-[#F4F7FC] px-4 py-3 text-sm font-medium text-[#0E1E3D] hover:bg-[#2463EB] hover:text-white">
                   {r.label} pain
                 </Link>
               </li>
             ))}
             <li>
-              <Link to="/corporate" className="font-hero inline-block rounded-full bg-[#F4F7FC] px-4 py-2 text-sm font-medium text-[#0E1E3D] hover:bg-[#2463EB] hover:text-white">
+              <Link to="/corporate" className="font-hero inline-block rounded-full bg-[#F4F7FC] px-4 py-3 text-sm font-medium text-[#0E1E3D] hover:bg-[#2463EB] hover:text-white">
                 Corporate wellness
               </Link>
             </li>

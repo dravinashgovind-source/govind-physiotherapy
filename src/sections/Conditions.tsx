@@ -231,7 +231,7 @@ export function Conditions() {
                 ))}
               </div>
               <div className="hidden items-center gap-4 md:flex" aria-hidden="true">
-                <span className="font-hero text-[10px] font-bold uppercase leading-tight tracking-[0.12em] text-[#55555B]">
+                <span className="font-hero text-[11px] font-bold uppercase leading-tight tracking-[0.12em] text-[#55555B]">
                   Neck to
                   <br />
                   <span style={{ color: ORANGE }}>ankle</span>
@@ -242,7 +242,7 @@ export function Conditions() {
                   ))}
                 </span>
               </div>
-              <p className="font-hero flex items-start gap-1.5 text-[10px] font-bold uppercase leading-tight tracking-[0.1em] text-[#55555B] md:text-[12px]">
+              <p className="font-hero flex items-start gap-1.5 text-[11px] font-bold uppercase leading-tight tracking-[0.1em] text-[#55555B] md:text-[12px]">
                 <Plus size={16} style={{ color: ORANGE }} aria-hidden="true" />
                 <span>
                   Assessment-led
@@ -274,7 +274,7 @@ export function Conditions() {
                     {String(active + 1).padStart(2, '0')} — {c.title}
                   </p>
                   <h3 className="font-hero mt-2 text-[15px] font-semibold leading-snug text-[#4a4a4f] md:text-[19px]">{c.tagline}</h3>
-                  <Link to={`/services/${c.slug}`} className="font-hero group mt-3 inline-flex items-center gap-1.5 text-[13px] font-bold text-[#1d1d1f] md:text-sm">
+                  <Link to={`/services/${c.slug}`} className="font-hero group mt-1 inline-flex min-h-11 items-center gap-1.5 text-[14px] font-bold text-[#1d1d1f] md:text-sm">
                     Learn more
                     <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </Link>
@@ -312,7 +312,7 @@ export function Conditions() {
                   onClick={() => goTo(i)}
                   aria-label={it.title}
                   aria-current={i === active ? 'step' : undefined}
-                  className="grid h-6 w-4 place-items-center"
+                  className="grid h-9 w-11 place-items-center md:h-6 md:w-4"
                 >
                   <span
                     className="block w-2 rounded-full transition-all duration-500"

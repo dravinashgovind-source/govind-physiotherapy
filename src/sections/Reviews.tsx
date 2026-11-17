@@ -24,7 +24,7 @@ function ReviewCard({ r, i }: { r: Review; i: number }) {
     .slice(0, 2)
     .toUpperCase();
   return (
-    <figure className="mb-5 break-inside-avoid rounded-[24px] border border-[#E6EBF3] bg-white p-6 shadow-[0_14px_34px_-24px_rgba(14,30,61,.35)]">
+    <figure className="break-inside-avoid md:mb-5 rounded-[24px] border border-[#E6EBF3] bg-white p-6 shadow-[0_14px_34px_-24px_rgba(14,30,61,.35)]">
       <div className="flex items-center justify-between">
         <Stars />
         <GoogleG size={18} />
@@ -50,11 +50,11 @@ function ReviewCard({ r, i }: { r: Review; i: number }) {
 
 export function Reviews() {
   return (
-    <section id="patients" aria-labelledby="reviews-title" className="relative overflow-hidden bg-white py-24 md:py-32">
+    <section id="patients" aria-labelledby="reviews-title" className="relative overflow-hidden bg-white py-16 md:py-32">
       <div className="mx-auto max-w-[1320px] px-4 md:px-6">
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Summary */}
-          <Reveal className="lg:col-span-4">
+          <Reveal className="min-w-0 lg:col-span-4">
             <div className="lg:sticky lg:top-28">
               <p className="font-hero flex items-center gap-2.5 text-sm font-semibold tracking-wide text-[#2463EB]">
                 <span className="size-1.5 rounded-full bg-[#2463EB]" aria-hidden="true" />
@@ -105,12 +105,17 @@ export function Reviews() {
           </Reveal>
 
           {/* Masonry of real reviews */}
-          <div className="columns-1 gap-5 md:columns-2 lg:col-span-8">
+          <div className="min-w-0 lg:col-span-8">
+            <p className="font-hero mt-4 flex items-center gap-2 text-sm font-semibold text-[#3B4A63] md:hidden" aria-hidden="true">
+          Swipe for more reviews <span className="inline-block animate-[nudge_1.6s_ease-in-out_infinite] motion-reduce:animate-none">→</span>
+        </p>
+            <div className="-mx-4 mt-4 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [scrollbar-width:none] md:mx-0 md:mt-0 md:block md:columns-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden">
             {googleReviews.map((r, i) => (
-              <Reveal key={r.name} delay={(i % 4) * 0.05}>
+              <Reveal key={r.name} delay={(i % 4) * 0.05} className="w-[86%] shrink-0 snap-start md:w-auto">
                 <ReviewCard r={r} i={i} />
               </Reveal>
             ))}
+          </div>
           </div>
         </div>
       </div>

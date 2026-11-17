@@ -169,6 +169,12 @@
   }
 }
 
+/* "Swipe to see more" hint on mobile carousels */
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
 /* Goniometer arc draw */
 @keyframes arc-draw {
   from {

@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Nav } from './components/Nav';
 import { Footer } from './components/Footer';
+import { MobileActionBar } from './components/MobileActionBar';
 import Home from './pages/Home';
 
 const Service = lazy(() => import('./pages/Service'));
@@ -57,6 +58,7 @@ export default function App() {
         </Suspense>
       </main>
       <Footer />
+      <MobileActionBar />
     </>
   );
 }
