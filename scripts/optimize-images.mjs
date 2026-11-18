@@ -90,4 +90,20 @@ for (const n of ['neck', 'shoulder', 'back', 'knee', 'ankle']) {
   console.log('✓ cut', n, width, '×', height);
 }
 
+// "Relief" figure poses for the /app body map: transparent, NOT trimmed, so every
+// pose shares the same canvas and the person stays in the same place between poses.
+// Run `node scripts/key-relief.mjs` first to make them from the *-raw.png renders.
+for (const f of fs.existsSync('images/openart/relief') ? fs.readdirSync('images/openart/relief').filter((x) => x.endsWith('.png') && !x.endsWith('-raw.png')) : []) {
+  const n = f.replace('.png', '');
+  const file = `images/openart/relief/${f}`;
+  const { width, height } = await sharp(file).metadata();
+  for (const w of [480, 900]) {
+    const img = sharp(file).resize({ width: w });
+    await img.clone().avif({ quality: 72 }).toFile(`${OUT}/relief-${n}-${w}.avif`);
+    await img.clone().webp({ quality: 86, alphaQuality: 90 }).toFile(`${OUT}/relief-${n}-${w}.webp`);
+  }
+  manifest[`relief-${n}`] = { width, height };
+  console.log('✓ relief', n);
+}
+
 fs.writeFileSync('src/content/image-manifest.json', JSON.stringify(manifest, null, 2) + '\n');

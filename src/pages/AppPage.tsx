@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { Photo } from '../components/Photo';
 import { Logo } from '../components/Logo';
+import { ReliefMap } from '../components/ReliefMap';
 import { clinic, telHref, whatsappHref } from '../config/clinic';
 import { services } from '../content/services';
 import { regionById } from '../content/regions';
@@ -170,7 +171,7 @@ function HeroVideo() {
   );
 }
 
-function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: (id: string) => void; onTab: (t: Tab) => void }) {
+function HomeTab({ onBook, onService, onTab }: { onBook: (concern?: string) => void; onService: (id: string) => void; onTab: (t: Tab) => void }) {
   const reduce = useReducedMotion();
   return (
     <div className="pb-6">
@@ -189,7 +190,7 @@ function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: 
             Personalised physiotherapy for an active, comfortable life.
           </motion.p>
           <motion.div className="mt-6 flex items-center gap-4" initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, ease }}>
-            <button type="button" onClick={onBook} className="font-hero flex h-12 items-center gap-3 rounded-full bg-white pl-6 pr-5 text-[15px] font-bold text-[#0E1E3D] shadow-[0_12px_30px_-10px_rgba(0,0,0,.5)] active:scale-[.98]">
+            <button type="button" onClick={() => onBook()} className="font-hero flex h-12 items-center gap-3 rounded-full bg-white pl-6 pr-5 text-[15px] font-bold text-[#0E1E3D] shadow-[0_12px_30px_-10px_rgba(0,0,0,.5)] active:scale-[.98]">
               Book Appointment <ArrowRight size={18} aria-hidden="true" />
             </button>
             <a href={clinic.google.reviewsUrl} target="_blank" rel="noopener noreferrer" className="font-hero inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/85">
@@ -233,7 +234,9 @@ function HomeTab({ onBook, onService, onTab }: { onBook: () => void; onService: 
         </Glass>
       </div>
 
-      <Banners onBook={onBook} onTab={onTab} />
+      <Banners onBook={() => onBook()} onTab={onTab} />
+
+      <ReliefMap onBook={onBook} />
 
       {/* Where does it hurt */}
       <section className="mt-7" aria-labelledby="app-areas">
@@ -786,7 +789,7 @@ function AppShell({ framed }: { framed?: boolean }) {
           <motion.main key={tab} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0 }} transition={{ duration: 0.25 }}>
             {tab === 'home' && (
               <HomeTab
-                onBook={() => setSheet({ open: true })}
+                onBook={(concern) => setSheet({ open: true, preset: concern })}
                 onTab={go}
                 onService={(id) => {
                   go('services');

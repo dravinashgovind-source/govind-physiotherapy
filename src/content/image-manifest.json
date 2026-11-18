@@ -146,5 +146,41 @@
   "cut-ankle": {
     "width": 1536,
     "height": 1080
+  },
+  "relief-ankle": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-arm": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-head": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-hip": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-knee": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-neck": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-neutral": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-ribs": {
+    "width": 1008,
+    "height": 1792
+  },
+  "relief-shoulder": {
+    "width": 1008,
+    "height": 1792
   }
 }
