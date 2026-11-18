@@ -78,8 +78,10 @@ export const clinic = {
   },
   wheelchairAccessible: true,
 
-  /** Absolute production URL, e.g. 'https://www.govindphysio.in'. Needed for canonical tags and the sitemap. */
-  siteUrl: (import.meta.env.VITE_SITE_URL as string | undefined) ?? '',
+  /** Absolute production URL (no trailing slash). Used for canonical tags, schema and the sitemap. */
+  siteUrl: ((import.meta.env.VITE_SITE_URL as string | undefined) || 'https://dravinashgovind.com').replace(/\/$/, ''),
+  /** Location from the Google plus code FV2J+22 Pune (decoded centre of the code). */
+  geo: { latitude: 18.45006, longitude: 73.88006 },
 } as const;
 
 export const telHref = `tel:${clinic.phone.e164}`;

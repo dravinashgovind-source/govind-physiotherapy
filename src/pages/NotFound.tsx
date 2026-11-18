@@ -6,7 +6,7 @@ import { regions } from '../content/regions';
 import { useSeo } from '../lib/seo';
 
 export default function NotFound() {
-  useSeo({ title: 'Page not found | Govind’s Advanced Pain Management & Physiotherapy Centre', description: 'This page could not be found.', path: '/404', noindex: true });
+  useSeo('not-found');
   return (
     <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-white pb-20 pt-[120px]">
       <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-20 size-[560px] rounded-full bg-[#EEF3FD] blur-3xl" />

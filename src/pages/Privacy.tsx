@@ -27,11 +27,7 @@ const blocks = [
 ];
 
 export default function Privacy() {
-  useSeo({
-    title: 'Privacy | Govind’s Advanced Pain Management & Physiotherapy Centre',
-    description: `How ${clinic.shortName} handles information you share through this website.`,
-    path: '/privacy',
-  });
+  useSeo('/privacy');
   return (
     <>
       <section className="relative overflow-hidden bg-white pb-14 pt-[120px] md:pt-[140px]">

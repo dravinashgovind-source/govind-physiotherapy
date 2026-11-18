@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode, useSyncExternalStore } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
@@ -833,10 +833,12 @@ const tabs: { id: Tab; label: string; icon: typeof Home }[] = [
 ];
 
 function AppShell({ framed }: { framed?: boolean }) {
-  const [tab, setTab] = useState<Tab>(() => {
-    const h = typeof window !== 'undefined' ? (window.location.hash.slice(1) as Tab) : 'home';
-    return tabs.some((t) => t.id === h) ? h : 'home';
-  });
+  const [tab, setTab] = useState<Tab>('home');
+  // Open the tab named in the URL hash (e.g. /app#appointment) after hydration.
+  useEffect(() => {
+    const h = window.location.hash.slice(1) as Tab;
+    if (h !== 'home' && tabs.some((t) => t.id === h)) setTab(h);
+  }, []);
   const [focus, setFocus] = useState<string | null>(null);
   const [sheet, setSheet] = useState<{ open: boolean; preset?: string }>({ open: false });
   const scroller = useRef<HTMLDivElement>(null);
@@ -932,16 +934,16 @@ function useInstall() {
 
 /* ------------------------------------------------------------------ page */
 
+const PHONE_QUERY = '(max-width: 767px)';
+const subscribePhone = (cb: () => void) => {
+  const mq = window.matchMedia(PHONE_QUERY);
+  mq.addEventListener('change', cb);
+  return () => mq.removeEventListener('change', cb);
+};
+
+/** Prerendered HTML is the desktop view; phones switch to the full-screen app right after hydration. */
 function useIsPhone() {
-  const q = '(max-width: 767px)';
-  const [m, setM] = useState(() => typeof window !== 'undefined' && window.matchMedia(q).matches);
-  useEffect(() => {
-    const mq = window.matchMedia(q);
-    const on = () => setM(mq.matches);
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, []);
-  return m;
+  return useSyncExternalStore(subscribePhone, () => window.matchMedia(PHONE_QUERY).matches, () => false);
 }
 
 export default function AppPage() {
@@ -955,12 +957,7 @@ export default function AppPage() {
       document.body.style.overflow = prev;
     };
   }, [phone]);
-  useSeo({
-    title: 'Govind’s Physiotherapy App | Book appointments, videos & reviews',
-    description: 'The Govind’s Advanced Pain Management & Physiotherapy Centre app: book appointments on WhatsApp, explore services, watch patient stories and find the clinic. Add it to your home screen.',
-    path: '/app',
-    image: '/img/app-hero-1600.webp',
-  });
+  useSeo('/app');
 
   useEffect(() => {
     const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
@@ -982,7 +979,7 @@ export default function AppPage() {
 
       {/* Larger screens: the app inside a phone, with install info */}
       {!phone && (
-      <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#F4F7FC] px-6 pb-16 pt-[120px]">
+      <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#F4F7FC] px-6 pb-16 pt-[120px] max-md:hidden">
         <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-20 size-[640px] rounded-full bg-[#2463EB]/15 blur-[120px]" />
         <div className="relative mx-auto grid w-full max-w-[1180px] items-center gap-14 lg:grid-cols-2">
           <div>
@@ -1017,7 +1014,7 @@ export default function AppPage() {
                   <p className="font-hero font-bold text-[#0E1E3D]">How to install on your phone</p>
                   <ol className="mt-3 space-y-2 text-[15px] text-[#3B4A63]">
                     <li>
-                      1. Open <span className="font-semibold text-[#0E1E3D]">{typeof window !== 'undefined' ? window.location.host : ''}/app</span> on your phone.
+                      1. Open <span className="font-semibold text-[#0E1E3D]">{clinic.siteUrl.replace(/^https?:\/\//, '')}/app</span> on your phone.
                     </li>
                     <li className="flex flex-wrap items-center gap-1">
                       2. iPhone: tap <Share size={15} className="inline" aria-label="Share" /> then <span className="font-semibold text-[#0E1E3D]">Add to Home Screen</span>.

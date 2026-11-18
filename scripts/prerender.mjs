@@ -1,144 +1,124 @@
-// Runs after `vite build`. Gives every route its own HTML file so the host
-// (e.g. Vercel) serves real pages with the right title, description and link
-// previews, and serves 404.html for unknown URLs. Also writes sitemap.xml.
+// Runs after `vite build` and `vite build --ssr`. Writes a complete static HTML
+// file for every route (full page content + title, description, canonical,
+// Open Graph and schema.org JSON-LD), so Google and AI crawlers (ChatGPT,
+// Perplexity, Claude, Gemini…) read the whole page without running JavaScript.
+// The same code runs locally and on Vercel: no browser needed.
 //
-// Two modes:
-//  1. Full prerender: if Google Chrome is available (local machine), every page
-//     is rendered with its full content.
-//  2. Meta-only (fallback, e.g. on Vercel): each route gets a copy of index.html
-//     with its own <title>, description, Open Graph tags, canonical and robots.
-//     The page content is then rendered by the browser as normal.
-import http from 'node:http';
+// Also writes sitemap.xml, robots.txt, llms.txt and 404.html.
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const DIST = path.resolve('dist');
-const PORT = 4791;
-const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '';
-const siteUrl = (process.env.VITE_SITE_URL || vercelUrl || '').replace(/\/$/, '');
-const BRAND = 'Govind’s Advanced Pain Management & Physiotherapy Centre';
+const SSR = path.resolve('dist-ssr/entry-server.js');
+const { render, seoPages, notFoundSeo, llmsTxt, SITE } = await import(pathToFileURL(SSR).href);
 
-// ---- Route metadata (read from the content files so it never drifts) --------
-const regionsSrc = fs.readFileSync('src/content/regions.ts', 'utf8');
-const regionMeta = [...regionsSrc.matchAll(/slug: '([^']+)',[\s\S]*?title: '([^']+)',\s*metaDescription:\s*\n?\s*(['"])([\s\S]*?)\3,/g)].map((m) => ({
-  path: `/services/${m[1]}`,
-  title: `${m[2]} | ${BRAND}`,
-  description: m[4],
-}));
+const shell = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const abs = (u) => (u.startsWith('http') ? u : SITE + u);
+// JSON-LD must not contain a raw "</script>".
+const ldJson = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
 
-const pages = [
-  {
-    path: '/',
-    title: `${BRAND} | Physiotherapy in Kondhwa, Pune`,
-    description:
-      'Assessment-based physiotherapy and pain management with Dr. Avinash Govind in Tilekar Nagar, Kondhwa, Pune. Rated 5.0 on Google. Back, neck, knee, sports, post-surgery and paediatric physiotherapy.',
-  },
-  {
-    path: '/corporate',
-    title: `Corporate Wellness & Workplace Physiotherapy in Pune | ${BRAND}`,
-    description: 'On-site physiotherapy camps, ergonomic assessments and back-care workshops for companies in Pune, by Govind’s Advanced Pain Management & Physiotherapy Centre, Kondhwa.',
-    image: '/img/corp-hero-1600.webp',
-  },
-  {
-    path: '/app',
-    title: 'Govind’s Physiotherapy App | Book appointments, videos & reviews',
-    description: 'Book appointments on WhatsApp, explore services, watch patient stories and find the clinic. Add the Govind’s app to your home screen.',
-    image: '/img/app-hero-1600.webp',
-  },
-  { path: '/privacy', title: `Privacy | ${BRAND}`, description: `How ${BRAND} handles information you share through this website.` },
-  ...regionMeta,
-];
-const notFound = { path: '/404', title: `Page not found | ${BRAND}`, description: 'This page could not be found.', noindex: true };
+function headFor(p) {
+  const url = abs(p.noindex ? '/' : p.path);
+  const robots = p.noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+  return [
+    `<title>${esc(p.title)}</title>`,
+    `<meta name="description" content="${esc(p.description)}" />`,
+    `<meta name="robots" content="${robots}" />`,
+    p.noindex ? '' : `<link rel="canonical" href="${esc(abs(p.path))}" />`,
+    `<meta property="og:title" content="${esc(p.title)}" />`,
+    `<meta property="og:description" content="${esc(p.description)}" />`,
+    `<meta property="og:url" content="${esc(url)}" />`,
+    `<meta property="og:image" content="${esc(abs(p.image))}" />`,
+    `<meta property="og:image:alt" content="${esc(p.title)}" />`,
+    `<meta name="twitter:title" content="${esc(p.title)}" />`,
+    `<meta name="twitter:description" content="${esc(p.description)}" />`,
+    `<meta name="twitter:image" content="${esc(abs(p.image))}" />`,
+    ...p.jsonLd.map((o) => `<script type="application/ld+json" data-seo>${ldJson(o)}</script>`),
+  ]
+    .filter(Boolean)
+    .map((l) => `    ${l}`)
+    .join('\n');
+}
 
-const outFile = (p) => path.join(DIST, p === '/' ? 'index.html' : p === '/404' ? '404.html' : `${p}/index.html`);
-const write = (file, html) => {
+function pageHtml(p, body) {
+  let html = shell;
+  // Drop the shell's generic tags; the page's own tags are inserted below.
+  html = html.replace(/\s*<title>[\s\S]*?<\/title>/, '');
+  html = html.replace(/\s*<meta name="(description|robots|twitter:title|twitter:description|twitter:image)"[^>]*>/g, '');
+  html = html.replace(/\s*<meta property="og:(title|description|url|image|image:alt)"[^>]*>/g, '');
+  html = html.replace(/\s*<link rel="canonical"[^>]*>/g, '');
+  // Page tags go straight after the viewport meta so the title is near the top.
+  html = html.replace(/(<meta name="viewport"[^>]*>)/, `$1\n${headFor(p)}`);
+  // Only the home page preloads the hero photo.
+  if (p.path !== '/') html = html.replace(/\s*<link rel="preload" as="image"[^>]*>/, '');
+  return html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+}
+
+const outFile = (p) => path.join(DIST, p === '/' ? 'index.html' : p === '/404' ? '404.html' : `${p.slice(1)}/index.html`);
+const write = (file, text) => {
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, html);
+  fs.writeFileSync(file, text);
 };
 
-// ---- Meta-only templating ------------------------------------------------------
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const shellHtml = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
-
-function withMeta(html, p) {
-  const abs = (u) => (siteUrl ? siteUrl + u : u);
-  const set = (attr, key, value) => {
-    const re = new RegExp(`<meta ${attr}="${key}" content="[^"]*"\\s*/?>`);
-    const tag = `<meta ${attr}="${key}" content="${esc(value)}" />`;
-    html = re.test(html) ? html.replace(re, tag) : html.replace('</head>', `    ${tag}\n  </head>`);
-  };
-  html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(p.title)}</title>`);
-  set('name', 'description', p.description);
-  set('property', 'og:title', p.title);
-  set('property', 'og:description', p.description);
-  set('property', 'og:url', abs(p.path === '/404' ? '/' : p.path));
-  if (p.image || siteUrl) set('property', 'og:image', abs(p.image ?? '/img/hero-care-1920.webp'));
-  set('name', 'robots', p.noindex ? 'noindex' : 'index, follow');
-  html = html.replace(/<link rel="canonical"[^>]*>\s*/g, '');
-  if (siteUrl && !p.noindex) html = html.replace('</head>', `    <link rel="canonical" href="${abs(p.path)}" />\n  </head>`);
-  return html;
+for (const p of [...seoPages, notFoundSeo]) {
+  const body = await render(p.path === '/404' ? '/__not-found__' : p.path);
+  write(outFile(p.path), pageHtml(p, body));
+  console.log('prerendered', p.path);
 }
 
-// ---- Full prerender (optional) ------------------------------------------------
-async function tryFullPrerender() {
-  let chromium;
-  try {
-    ({ chromium } = await import('playwright-core'));
-  } catch {
-    return false;
-  }
-  let browser;
-  try {
-    browser = await chromium.launch({ channel: 'chrome' });
-  } catch {
-    return false;
-  }
-  const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.avif': 'image/avif', '.png': 'image/png', '.txt': 'text/plain', '.json': 'application/json' };
-  const server = http.createServer((req, res) => {
-    const f = path.join(DIST, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-    if (f.startsWith(DIST) && fs.existsSync(f) && fs.statSync(f).isFile()) {
-      res.writeHead(200, { 'content-type': types[path.extname(f)] ?? 'application/octet-stream' });
-      return fs.createReadStream(f).pipe(res);
-    }
-    res.writeHead(200, { 'content-type': 'text/html' });
-    res.end(shellHtml);
-  });
-  await new Promise((r) => server.listen(PORT, r));
-  try {
-    // Reduced motion renders every element in its final, visible state.
-    const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' });
-    for (const p of [...pages, notFound]) {
-      await page.goto(`http://localhost:${PORT}${p.path}`, { waitUntil: 'networkidle' });
-      await page.waitForTimeout(400);
-      write(outFile(p.path), withMeta(await page.content(), p));
-      console.log('prerendered', p.path);
-    }
-  } finally {
-    await browser.close();
-    server.close();
-  }
-  return true;
-}
+// ---- sitemap.xml --------------------------------------------------------------
+const today = new Date().toISOString().slice(0, 10);
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${seoPages
+  .map(
+    (p) => `  <url>
+    <loc>${abs(p.path)}</loc>
+    <lastmod>${today}</lastmod>${p.changefreq ? `\n    <changefreq>${p.changefreq}</changefreq>` : ''}${p.priority != null ? `\n    <priority>${p.priority.toFixed(1)}</priority>` : ''}
+    <image:image><image:loc>${esc(abs(p.image))}</image:loc></image:image>
+  </url>`,
+  )
+  .join('\n')}
+</urlset>
+`;
+write(path.join(DIST, 'sitemap.xml'), sitemap);
 
-const full = process.env.SKIP_FULL_PRERENDER ? false : await tryFullPrerender();
-if (!full) {
-  console.log('Chrome not available: writing per-route HTML with page metadata.');
-  for (const p of [...pages, notFound]) {
-    write(outFile(p.path), withMeta(shellHtml, p));
-    console.log('meta page', p.path);
-  }
-}
+// ---- robots.txt: everyone welcome, including AI search & assistant crawlers ----
+const aiBots = [
+  'Googlebot',
+  'Bingbot',
+  'Google-Extended',
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'ClaudeBot',
+  'Claude-SearchBot',
+  'Claude-User',
+  'anthropic-ai',
+  'PerplexityBot',
+  'Perplexity-User',
+  'Applebot',
+  'Applebot-Extended',
+  'meta-externalagent',
+  'DuckAssistBot',
+  'CCBot',
+];
+const robots = `# ${SITE}
+# All pages may be crawled and indexed, including by AI search and assistant crawlers.
 
-// ---- Sitemap -----------------------------------------------------------------
-if (siteUrl) {
-  const today = new Date().toISOString().slice(0, 10);
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages
-    .map((p) => `  <url><loc>${siteUrl}${p.path}</loc><lastmod>${today}</lastmod></url>`)
-    .join('\n')}\n</urlset>\n`;
-  fs.writeFileSync(path.join(DIST, 'sitemap.xml'), xml);
-  fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`);
-  console.log('sitemap.xml written for', siteUrl);
-} else {
-  console.warn('⚠ No site URL (VITE_SITE_URL / Vercel production URL): canonical tags and sitemap.xml skipped.');
-}
-console.log(`✓ ${pages.length + 1} pages written (${full ? 'full prerender' : 'meta-only'})`);
+User-agent: *
+Allow: /
+
+${aiBots.map((b) => `User-agent: ${b}`).join('\n')}
+Allow: /
+
+Sitemap: ${SITE}/sitemap.xml
+`;
+write(path.join(DIST, 'robots.txt'), robots);
+
+// ---- llms.txt: plain-text summary for AI assistants ----------------------------
+write(path.join(DIST, 'llms.txt'), llmsTxt() + '\n');
+
+console.log(`✓ ${seoPages.length + 1} pages prerendered for ${SITE}; sitemap.xml, robots.txt, llms.txt written`);

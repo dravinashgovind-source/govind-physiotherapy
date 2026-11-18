@@ -132,7 +132,7 @@ async function newPage(opts = {}) {
   await page.goto(base + '/services/does-not-exist', { waitUntil: 'networkidle' });
   check('Unknown service → 404', (await page.getByText('out of range.').count()) === 1);
   await page.goto(base + '/totally/missing', { waitUntil: 'networkidle' });
-  check('Unknown route → 404 + noindex', (await page.getByText('out of range.').count()) === 1 && (await page.locator('meta[name=robots]').getAttribute('content')) === 'noindex');
+  check('Unknown route → 404 + noindex', (await page.getByText('out of range.').count()) === 1 && (await page.locator('meta[name=robots]').getAttribute('content')) ?.startsWith('noindex'));
   await page.goto(base + '/corporate', { waitUntil: 'networkidle' });
   check('Corporate page renders', (await page.locator('h1').innerText()).includes('Healthy Teams'));
   const cf = page.getByRole('form', { name: 'Corporate wellness enquiry' });

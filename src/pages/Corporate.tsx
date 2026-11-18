@@ -176,23 +176,7 @@ function EnquiryForm() {
 
 export default function Corporate() {
   const reduce = useReducedMotion();
-  useSeo({
-    title: "Corporate Wellness & Workplace Physiotherapy in Pune | Govind’s Advanced Pain Management & Physiotherapy Centre",
-    description:
-      'On-site physiotherapy camps, ergonomic assessments and back-care workshops for companies in Pune, by Govind’s Advanced Pain Management & Physiotherapy Centre, Kondhwa.',
-    path: '/corporate',
-    image: '/img/corp-hero-1600.webp',
-    jsonLd: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'Service',
-        name: 'Corporate Wellness Programme',
-        serviceType: 'Workplace physiotherapy and ergonomics',
-        areaServed: 'Pune',
-        provider: { '@type': 'MedicalClinic', name: clinic.name, telephone: clinic.phone.e164 },
-      },
-    ],
-  });
+  useSeo('/corporate');
   const rise = (d: number) => ({ initial: reduce ? false : { opacity: 0, y: 22 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, delay: d, ease } });
 
   return (

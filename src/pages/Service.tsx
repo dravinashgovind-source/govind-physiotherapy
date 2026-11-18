@@ -6,7 +6,7 @@ import { googleReviews } from '../content/media';
 import { Photo } from '../components/Photo';
 import { Reveal } from '../components/Reveal';
 import { SectionHeading, btnPrimary } from '../components/SectionHeading';
-import { absoluteUrl, localBusinessJsonLd, useSeo } from '../lib/seo';
+import { useSeo } from '../lib/seo';
 import { clinic, telHref, whatsappHref } from '../config/clinic';
 import NotFound from './NotFound';
 
@@ -39,33 +39,7 @@ export default function Service() {
   const path = `/services/${slug}`;
   const img = region ? heroImage[region.id] : undefined;
 
-  useSeo({
-    title: region ? `${region.title} | Govind’s Advanced Pain Management & Physiotherapy Centre` : 'Page not found',
-    description: region?.metaDescription ?? '',
-    path,
-    image: img ? `/img/${img.name}-1600.webp` : undefined,
-    noindex: !region,
-    jsonLd: region
-      ? [
-          {
-            '@context': 'https://schema.org',
-            '@type': 'MedicalWebPage',
-            name: region.title,
-            description: region.metaDescription,
-            about: { '@type': 'AnatomicalStructure', name: region.label },
-            publisher: localBusinessJsonLd(),
-          },
-          {
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
-              { '@type': 'ListItem', position: 2, name: `${region.label} pain`, item: absoluteUrl(path) },
-            ],
-          },
-        ]
-      : [],
-  });
+  useSeo(region ? path : 'not-found');
 
   if (!region || !img) return <NotFound />;
   const others = regions.filter((r) => r.id !== region.id);
@@ -218,6 +192,27 @@ export default function Service() {
                 </div>
               </div>
             </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Common questions */}
+      <section aria-labelledby="sv-faq" className="bg-white pb-16 md:pb-28">
+        <div className="mx-auto max-w-[920px] px-4 md:px-6">
+          <h2 id="sv-faq" className="font-hero text-[clamp(1.8rem,3vw,2.6rem)] leading-[1.1] tracking-[-0.02em] text-[#0E1E3D]">
+            <span className="font-normal">Common questions about </span>
+            <span className="font-extrabold">{region.label.toLowerCase()} pain.</span>
+          </h2>
+          <div className="mt-8 space-y-3">
+            {region.faqs.map((f) => (
+              <details key={f.q} className="group rounded-[22px] border border-[#E6EBF3] bg-white open:border-[#2463EB]/40 open:shadow-[0_16px_34px_-28px_rgba(14,30,61,.45)]">
+                <summary className="font-hero flex cursor-pointer list-none items-center justify-between gap-6 px-6 py-5 text-[1.05rem] font-bold text-[#0E1E3D] md:px-7 [&::-webkit-details-marker]:hidden">
+                  <h3>{f.q}</h3>
+                  <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-full bg-[#F4F7FC] text-xl leading-none transition-transform group-open:rotate-45 group-open:bg-[#2463EB] group-open:text-white">+</span>
+                </summary>
+                <p className="px-6 pb-6 leading-relaxed text-[#3B4A63] md:px-7">{f.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

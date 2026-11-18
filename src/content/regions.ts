@@ -23,6 +23,8 @@ export interface Region {
   care: string[];
   /** Range-of-motion fact used as an editorial caption. General reference values only. */
   romCaption: string;
+  /** Common questions, shown on the page and used for FAQ schema. General information only. */
+  faqs: { q: string; a: string }[];
 }
 
 export const regions: Region[] = [
@@ -46,6 +48,11 @@ export const regions: Region[] = [
     assessment: ['Posture at rest and at work', 'Range of rotation and side-bending', 'Shoulder blade control', 'Nerve-related symptoms into the arm'],
     care: ['Manual therapy', 'Mobility exercises', 'Deep neck flexor strengthening', 'Work-station and posture guidance'],
     romCaption: 'Cervical rotation · ~70–90° each side (typical adult reference)',
+    faqs: [
+      { q: 'Can physiotherapy help neck pain from desk or phone use?', a: 'Often, yes. Screen-related neck pain usually responds to a mix of hands-on therapy, mobility and strengthening exercises, and changes to how your workstation is set up. Your assessment shows which of these suit you.' },
+      { q: 'Is physiotherapy suitable for cervical spondylosis?', a: 'Physiotherapy is commonly used to manage the pain and stiffness linked to cervical spondylosis. Care focuses on gentle mobility, strengthening the deep neck muscles and posture guidance, and we refer you on if your symptoms need further tests.' },
+      { q: 'When should neck pain be checked urgently?', a: 'Seek urgent medical care if neck pain follows an accident or fall, or comes with a severe headache, fever, weakness, or numbness spreading into the arms.' },
+    ],
   },
   {
     id: 'shoulder',
@@ -67,6 +74,11 @@ export const regions: Region[] = [
     assessment: ['Active and passive range of motion', 'Rotator cuff strength', 'Shoulder blade movement', 'Neck involvement'],
     care: ['Graded mobility work', 'Rotator cuff and scapular strengthening', 'Manual therapy', 'Activity modification'],
     romCaption: 'Shoulder flexion · ~180° (typical adult reference)',
+    faqs: [
+      { q: 'Can physiotherapy help a frozen shoulder?', a: 'Physiotherapy is a common part of frozen shoulder care. Gentle mobility work, manual therapy and a home exercise plan aim to ease pain and gradually restore movement. Recovery is often slow, so we review your progress regularly.' },
+      { q: 'Why does my shoulder hurt when I lift my arm?', a: 'Pain when lifting the arm is often linked to the rotator cuff or to how the shoulder blade moves. An assessment checks your strength, range and shoulder-blade control to find what is contributing.' },
+      { q: 'How long does shoulder rehabilitation take?', a: 'It depends on the cause and how long you have had symptoms. We give you an estimate after your assessment and adjust the plan as you improve.' },
+    ],
   },
   {
     id: 'back',
@@ -88,6 +100,11 @@ export const regions: Region[] = [
     assessment: ['Movement of the spine in each direction', 'Hip and core control', 'Nerve sensitivity tests', 'Daily sitting and lifting habits'],
     care: ['Manual therapy', 'Progressive core and hip strengthening', 'Graded return to bending and lifting', 'Non-surgical pain management'],
     romCaption: 'Lumbar flexion · assessed in every back evaluation',
+    faqs: [
+      { q: 'Can physiotherapy help sciatica?', a: 'It may help. Treatment usually combines pain-relief therapy, gentle nerve and spine mobility work and core strengthening, guided by what your assessment shows.' },
+      { q: 'Do I need an MRI before physiotherapy for back pain?', a: 'Not usually. Most back pain can be assessed clinically. If you already have X-ray or MRI reports, bring them along, and we will tell you if your symptoms suggest you need further tests or a specialist.' },
+      { q: 'Should I rest or keep moving with lower back pain?', a: 'For most everyday back pain, staying gently active tends to help more than long bed rest. Your physiotherapist shows you which movements are safe for you and how to build up.' },
+    ],
   },
   {
     id: 'hip',
@@ -109,6 +126,11 @@ export const regions: Region[] = [
     assessment: ['Hip range in all directions', 'Glute and hip strength', 'Walking pattern', 'Balance on one leg'],
     care: ['Mobility exercises', 'Hip and glute strengthening', 'Gait retraining', 'Balance work'],
     romCaption: 'Hip flexion · ~120° (typical adult reference)',
+    faqs: [
+      { q: 'What can cause hip pain?', a: 'Common causes include joint stiffness, arthritis, weak glute muscles and pain referred from the lower back. An assessment helps tell these apart.' },
+      { q: 'Can physiotherapy help hip arthritis?', a: 'For many people, physiotherapy is a recommended part of managing hip osteoarthritis. Strengthening, mobility work and walking advice aim to reduce pain and keep you active.' },
+      { q: 'Do you help with rehabilitation after hip replacement?', a: 'Yes. Post-surgery rehabilitation, including after hip replacement, is one of our services. Please bring your surgeon’s notes to your first visit.' },
+    ],
   },
   {
     id: 'knee',
@@ -130,6 +152,11 @@ export const regions: Region[] = [
     assessment: ['Bend and straighten range', 'Quadriceps and hip strength', 'Swelling and joint stability', 'Alignment during squats and steps'],
     care: ['Progressive strengthening', 'Mobility work', 'Manual therapy', 'Return-to-activity planning'],
     romCaption: 'Knee flexion · ~135° (typical adult reference)',
+    faqs: [
+      { q: 'Can physiotherapy help knee osteoarthritis?', a: 'Exercise-based physiotherapy is a recommended first-line treatment for knee osteoarthritis. Strengthening the thigh and hip muscles, mobility work and activity advice aim to reduce pain and make walking and stairs easier.' },
+      { q: 'Is physiotherapy needed after knee replacement or ACL surgery?', a: 'Rehabilitation is an important part of recovery after knee replacement or ligament surgery. We follow your surgeon’s guidance and build up your strength, knee bend and walking step by step.' },
+      { q: 'Why does my knee hurt on the stairs?', a: 'Pain on stairs is common with kneecap-related pain and arthritis, and is often linked to the strength of the thigh and hip muscles. Your assessment looks at how your knee handles load during steps and squats.' },
+    ],
   },
   {
     id: 'ankle',
@@ -151,6 +178,11 @@ export const regions: Region[] = [
     assessment: ['Ankle range, especially bending upward', 'Calf strength', 'Balance and stability', 'Footwear and walking pattern'],
     care: ['Balance and proprioception training', 'Calf and foot strengthening', 'Mobility work', 'Graded return to sport'],
     romCaption: 'Ankle dorsiflexion · ~20° (typical adult reference)',
+    faqs: [
+      { q: 'How soon should I start physiotherapy after an ankle sprain?', a: 'Gentle, guided movement usually starts within the first few days, once severe pain and swelling settle. See a doctor first if you cannot put weight on the foot or the pain is severe.' },
+      { q: 'Can physiotherapy help heel pain or plantar fasciitis?', a: 'Often, yes. Care usually includes calf and foot stretching and strengthening, load management, footwear advice and, where suitable, pain-relief therapy.' },
+      { q: 'Why does my ankle keep giving way?', a: 'Repeated sprains can leave the ankle with reduced balance and weaker supporting muscles. Balance and strengthening exercises aim to rebuild stability and lower the chance of another sprain.' },
+    ],
   },
 ];
 
