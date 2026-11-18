@@ -33,6 +33,7 @@ import {
   HandHeart,
 } from 'lucide-react';
 import { Photo } from '../components/Photo';
+import { Logo } from '../components/Logo';
 import { clinic, telHref, whatsappHref } from '../config/clinic';
 import { services } from '../content/services';
 import { regionById } from '../content/regions';
@@ -853,15 +854,9 @@ function AppShell({ framed }: { framed?: boolean }) {
   return (
     <div className="relative h-full w-full overflow-hidden text-white" style={{ background: `radial-gradient(120% 60% at 80% 0%, #17336F 0%, ${NAVY} 45%, #081536 100%)` }}>
       {/* App bar */}
-      <header className={`absolute inset-x-0 top-0 z-30 flex items-center justify-between px-5 pb-3 ${framed ? 'pt-12' : 'pt-[max(14px,env(safe-area-inset-top))]'}`} style={{ background: scrolled ? 'rgba(11,30,74,.82)' : 'transparent', backdropFilter: scrolled ? 'blur(14px)' : 'none', WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'none', transition: 'background .3s' }}>
-        <Link to="/" className="flex items-center gap-2.5" aria-label={`${clinic.name}, website home`}>
-          <span className="grid size-10 place-items-center rounded-xl bg-white">
-            <img src="/img/logo-mark-104.png" alt="" width={44} height={38} className="h-7 w-auto" />
-          </span>
-          <span className="leading-tight">
-            <span className="font-hero block text-[14px] font-bold">Dr. Avinash Govind</span>
-            <span className="block text-[12px] text-white/70">Physiotherapy</span>
-          </span>
+      <header className={`absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-2 px-3 pb-3 ${framed ? 'pt-12' : 'pt-[max(14px,env(safe-area-inset-top))]'}`} style={{ background: scrolled ? 'rgba(11,30,74,.82)' : 'transparent', backdropFilter: scrolled ? 'blur(14px)' : 'none', WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'none', transition: 'background .3s' }}>
+        <Link to="/" className="flex h-[54px] items-center rounded-full bg-white pl-3 pr-4 shadow-[0_8px_24px_-12px_rgba(0,0,0,.45)]" aria-label={`${clinic.name}, website home`}>
+          <Logo />
         </Link>
         <a href={telHref} aria-label={`Call ${clinic.phone.display}`} className="grid size-11 place-items-center rounded-full border border-white/15 bg-white/[0.08]">
           <Phone size={19} aria-hidden="true" />
