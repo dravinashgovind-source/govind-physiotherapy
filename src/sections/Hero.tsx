@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Phone, Star } from 'lucide-react';
 import { Photo } from '../components/Photo';
 import { clinic, telHref } from '../config/clinic';
+import { BookLink } from '../components/Booking';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -80,13 +80,12 @@ export function Hero() {
           </motion.p>
 
           <motion.div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4" {...rise(0.62)}>
-            <Link
-              to="/#book"
+            <BookLink
               className="font-hero group inline-flex h-[64px] items-center gap-4 rounded-full bg-[#2463EB] px-10 text-lg font-semibold text-white shadow-[0_12px_30px_-12px_rgba(36,99,235,.6)] transition-colors hover:bg-[#1D4FD8]"
             >
               Book Appointment
               <ArrowRight size={22} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </Link>
+            </BookLink>
             <a href={telHref} className="inline-flex min-h-12 items-center gap-2 font-medium text-[#0E1E3D]/80 hover:text-[#0E1E3D]">
               <Phone size={17} aria-hidden="true" /> {clinic.phone.display}
             </a>

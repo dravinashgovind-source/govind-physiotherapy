@@ -5,6 +5,7 @@ import { ArrowRight, Plus } from 'lucide-react';
 import manifest from '../content/image-manifest.json';
 import { conditions, type Callout, type Condition } from '../content/conditions';
 import { SectionHeading } from '../components/SectionHeading';
+import { BookLink } from '../components/Booking';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const ORANGE = '#F26A2E';
@@ -333,12 +334,11 @@ export function Conditions() {
               <p className="font-hero text-lg font-bold text-[#0E1E3D]">Not sure what’s causing your pain?</p>
               <p className="mt-1 text-[0.95rem] text-[#3B4A63]">A one-to-one assessment is the first step. This information is general and not a diagnosis.</p>
             </div>
-            <Link
-              to="/#book"
+            <BookLink
               className="font-nav inline-flex h-12 shrink-0 items-center gap-2 rounded-full bg-[#2463EB] px-7 text-[13px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#1D4FD8]"
             >
               Book Appointment <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            </BookLink>
           </div>
         </div>
       </div>

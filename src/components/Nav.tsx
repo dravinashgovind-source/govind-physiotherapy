@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, Phone, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { clinic, telHref } from '../config/clinic';
+import { BookLink } from './Booking';
 
 const links = [
   { href: '/#services', label: 'Services' },
@@ -82,12 +83,11 @@ export function Nav() {
             ))}
           </ul>
 
-          <Link
-            to="/#book"
+          <BookLink
             className="hidden h-12 items-center rounded-full bg-[#2463EB] px-7 text-[13px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#1D4FD8] sm:inline-flex"
           >
             Book Appointment
-          </Link>
+          </BookLink>
           <a href={telHref} className="hidden items-center gap-1.5 px-2 text-[15px] text-[#2463EB] hover:text-[#1D4FD8] md:inline-flex" aria-label={`Call the clinic on ${clinic.phone.display}`}>
             <Phone size={15} aria-hidden="true" /> Call Us
           </a>
@@ -130,9 +130,9 @@ export function Nav() {
               ))}
             </ul>
             <div className="mt-2 grid gap-2 border-t border-[#EEF1F6] p-2 pt-4">
-              <Link to="/#book" className="flex h-12 items-center justify-center rounded-full bg-[#2463EB] text-[13px] font-bold uppercase tracking-[0.08em] text-white">
+              <BookLink onOpen={() => setOpen(false)} className="flex h-12 items-center justify-center rounded-full bg-[#2463EB] text-[13px] font-bold uppercase tracking-[0.08em] text-white">
                 Book Appointment
-              </Link>
+              </BookLink>
               <a href={telHref} className="flex h-12 items-center justify-center gap-2 rounded-full text-[15px] text-[#2463EB]">
                 <Phone size={16} aria-hidden="true" /> Call {clinic.phone.display}
               </a>

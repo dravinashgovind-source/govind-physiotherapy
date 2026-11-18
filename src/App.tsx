@@ -4,6 +4,7 @@ import { Nav } from './components/Nav';
 import { Footer } from './components/Footer';
 import { MobileActionBar } from './components/MobileActionBar';
 import Home from './pages/Home';
+import { BookingProvider } from './components/Booking';
 
 const Service = lazy(() => import('./pages/Service'));
 const Privacy = lazy(() => import('./pages/Privacy'));
@@ -47,7 +48,7 @@ export default function App() {
   const { pathname } = useLocation();
   const siteChrome = pathname === '/app' ? 'max-md:hidden' : 'contents';
   return (
-    <>
+    <BookingProvider>
       <ScrollManager />
       <div className={siteChrome}>
         <Nav />
@@ -68,6 +69,6 @@ export default function App() {
         <Footer />
         <MobileActionBar />
       </div>
-    </>
+    </BookingProvider>
   );
 }

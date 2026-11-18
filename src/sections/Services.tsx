@@ -1,9 +1,17 @@
-import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { Photo } from '../components/Photo';
 import { Reveal } from '../components/Reveal';
 import { SectionHeading, btnSecondary } from '../components/SectionHeading';
 import { moreServices, services, type Service } from '../content/services';
+import { BookLink } from '../components/Booking';
+
+/** Concern pre-selected in the booking form for each service card. */
+const servicePreset: Record<string, string | undefined> = {
+  spine: 'Back pain / Sciatica',
+  postop: 'Post-surgery rehab',
+  sports: 'Sports injury',
+  senior: 'Senior care',
+};
 
 function ServiceCard({ s, big }: { s: Service; big?: boolean }) {
   return (
@@ -35,13 +43,13 @@ function ServiceCard({ s, big }: { s: Service; big?: boolean }) {
           </div>
         </div>
       </div>
-      <Link
-        to="/#book"
+      <BookLink
+        preset={servicePreset[s.id]}
         aria-label={`Book an appointment for ${s.title}`}
         className="absolute right-5 top-5 grid size-11 place-items-center rounded-full bg-white/90 text-[#0E1E3D] opacity-100 shadow-lg transition-all duration-300 hover:bg-[#2463EB] hover:text-white md:-translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus:translate-y-0 md:focus:opacity-100"
       >
         <ArrowUpRight size={19} aria-hidden="true" />
-      </Link>
+      </BookLink>
     </article>
   );
 }
@@ -58,9 +66,9 @@ export function Services() {
           bold="under one roof."
           sub="From everyday aches to post-surgery recovery, every programme starts with a one-to-one assessment and is built around you."
           aside={
-            <Link to="/#book" className={`${btnSecondary} shrink-0 self-start md:self-auto`}>
+            <BookLink preset="Other / not sure" className={`${btnSecondary} shrink-0 self-start md:self-auto`}>
               Not sure which? Ask us <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            </BookLink>
           }
         />
 

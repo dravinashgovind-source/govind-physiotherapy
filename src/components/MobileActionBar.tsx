@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CalendarCheck, MessageCircle, Phone } from 'lucide-react';
 import { telHref, whatsappHref } from '../config/clinic';
+import { BookLink } from './Booking';
 
 /**
  * Phones & tablets: a slim bar fixed to the bottom with Call · WhatsApp · Book.
@@ -31,7 +32,7 @@ export function MobileActionBar() {
     };
   }, [pathname]);
 
-  const bookHref = pathname === '/corporate' ? '/corporate#corp-enquiry' : '/#book';
+  const bookCls = 'font-hero flex h-12 items-center justify-center gap-1.5 rounded-full bg-[#2463EB] text-sm font-bold text-white active:bg-[#1D4FD8]';
 
   return (
     <AnimatePresence>
@@ -51,9 +52,15 @@ export function MobileActionBar() {
             <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="font-hero flex h-12 items-center justify-center gap-1.5 rounded-full text-sm font-bold text-[#0E1E3D] active:bg-[#F4F7FC]">
               <MessageCircle size={17} className="text-[#25D366]" aria-hidden="true" /> WhatsApp
             </a>
-            <Link to={bookHref} className="font-hero flex h-12 items-center justify-center gap-1.5 rounded-full bg-[#2463EB] text-sm font-bold text-white active:bg-[#1D4FD8]">
-              <CalendarCheck size={17} aria-hidden="true" /> Book
-            </Link>
+            {pathname === '/corporate' ? (
+              <Link to="/corporate#corp-enquiry" className={bookCls}>
+                <CalendarCheck size={17} aria-hidden="true" /> Book
+              </Link>
+            ) : (
+              <BookLink className={bookCls}>
+                <CalendarCheck size={17} aria-hidden="true" /> Book
+              </BookLink>
+            )}
           </div>
         </motion.nav>
       )}

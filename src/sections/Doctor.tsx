@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
 import { ArrowRight, Award, HeartPulse, Star, Stethoscope, Users } from 'lucide-react';
 import { Photo } from '../components/Photo';
 import { Reveal } from '../components/Reveal';
 import { clinic } from '../config/clinic';
+import { BookLink } from '../components/Booking';
 
 const highlights = [
   { icon: Users, value: clinic.ownerStatements.patientsTreated, label: 'Patients treated' },
@@ -105,12 +105,11 @@ export function Doctor() {
                 <span className="block text-sm text-[#3B4A63]">{clinic.coConsultant.qualifications.join(', ')} · {clinic.coConsultant.role}</span>
               </span>
             </div>
-            <Link
-              to="/#book"
+            <BookLink
               className="font-nav mt-10 inline-flex h-12 items-center gap-2 rounded-full bg-[#2463EB] px-7 text-[13px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#1D4FD8]"
             >
               Consult Dr. Avinash <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            </BookLink>
           </Reveal>
         </div>
       </div>

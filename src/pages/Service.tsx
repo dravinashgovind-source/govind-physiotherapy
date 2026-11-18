@@ -9,6 +9,7 @@ import { SectionHeading, btnPrimary } from '../components/SectionHeading';
 import { useSeo } from '../lib/seo';
 import { clinic, telHref, whatsappHref } from '../config/clinic';
 import NotFound from './NotFound';
+import { BookLink } from '../components/Booking';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -20,6 +21,16 @@ const heroImage: Record<string, { name: string; widths: number[]; alt?: string }
   knee: { name: 'knee', widths: [800, 1600, 2400] },
   ankle: { name: 'ankle', widths: [800, 1600, 2400] },
   hip: { name: 'svc-senior', widths: [800, 1600], alt: 'An older man doing a supported sit-to-stand exercise with a physiotherapist.' },
+};
+
+/** Concern pre-selected in the booking form for each area. */
+const regionPreset: Record<string, string | undefined> = {
+  neck: 'Neck pain',
+  shoulder: 'Shoulder pain',
+  back: 'Back pain / Sciatica',
+  knee: 'Knee pain',
+  ankle: 'Ankle / Heel pain',
+  hip: 'Other / not sure',
 };
 
 /** Real Google reviews that mention this area (matched by the review's tag). */
@@ -69,9 +80,9 @@ export default function Service() {
               {region.about}
             </motion.p>
             <motion.div {...rise(0.3)} className="mt-9 flex flex-wrap items-center gap-3">
-              <Link to="/#book" className={btnPrimary}>
+              <BookLink preset={regionPreset[region.id]} className={btnPrimary}>
                 Book assessment <ArrowRight size={16} aria-hidden="true" />
-              </Link>
+              </BookLink>
               <a href={telHref} className="font-hero inline-flex h-12 items-center gap-2 px-4 font-semibold text-[#0E1E3D] hover:text-[#1D4FD8]">
                 <Phone size={17} aria-hidden="true" /> {clinic.phone.display}
               </a>
