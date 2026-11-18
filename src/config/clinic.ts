@@ -79,7 +79,7 @@ export const clinic = {
   wheelchairAccessible: true,
 
   /** Absolute production URL (no trailing slash). Used for canonical tags, schema and the sitemap. */
-  siteUrl: ((import.meta.env.VITE_SITE_URL as string | undefined) || 'https://dravinashgovind.com').replace(/\/$/, ''),
+  siteUrl: ((import.meta.env.VITE_SITE_URL as string | undefined) || 'https://www.dravinashgovind.com').replace(/\/$/, ''),
   /** Location from the Google plus code FV2J+22 Pune (decoded centre of the code). */
   geo: { latitude: 18.45006, longitude: 73.88006 },
 } as const;
