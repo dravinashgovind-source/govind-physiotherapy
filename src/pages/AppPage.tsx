@@ -22,16 +22,15 @@ import {
   Store,
   X,
   Zap,
+  Activity,
+  MoveVertical,
   CalendarCheck,
   Stethoscope,
   Play,
   Pause,
   ArrowUpRight,
   BadgeCheck,
-  ClipboardCheck,
-  Route,
   HandHeart,
-  TrendingUp,
 } from 'lucide-react';
 import { Photo } from '../components/Photo';
 import { clinic, telHref, whatsappHref } from '../config/clinic';
@@ -232,7 +231,7 @@ function HeroVideo() {
           loop
           playsInline
           preload={autoplay ? 'auto' : 'none'}
-          aria-label="A walkthrough of the clinic: reception, treatment equipment and the therapy hall."
+          aria-label="A walkthrough of Govind’s clinic: reception, consultation room, treatment and the therapy hall."
         />
         {/* Shade: top for the app bar, left/bottom for the text, and a seamless fade into the app background */}
         <div
@@ -428,44 +427,48 @@ function Banners({ onBook, onTab }: { onBook: () => void; onTab: (t: Tab) => voi
   return (
     <section className="mt-7" aria-labelledby="app-banners">
       <div className="flex items-end justify-between px-5">
-        <h2 id="app-banners" className="font-hero text-lg font-bold text-white">Move better with us</h2>
+        <h2 id="app-banners" className="font-hero text-lg font-bold text-white">Physiotherapy at Govind’s</h2>
         <span className="text-[12px] text-white/50">Swipe →</span>
       </div>
       <ul ref={slider.ref} onScroll={slider.onScroll} className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-5 px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {/* 01 Dynamic movement */}
+        {/* 01 Manual therapy (dark, oversized background word) */}
         <li className="w-[88%] shrink-0 snap-start">
           <article className={`${card} bg-[#07121F]`}>
-            <Photo name="app-b1" widths={[800, 1600]} sizes="360px" alt="A woman holding a deep side-lunge stretch with one arm reaching up." imgClassName={`${img} object-[100%_center]`} />
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(7,18,31,.97) 0%, rgba(7,18,31,.85) 45%, rgba(7,18,31,.1) 80%), linear-gradient(0deg, rgba(7,18,31,.9) 0%, transparent 35%)' }} />
-            <p aria-hidden="true" className="display absolute -left-2 top-3 select-none text-[96px] leading-none text-white/[0.06]">MOVEMENT</p>
+            <Photo name="svc-spine" sizes="360px" alt="A physiotherapist giving hands-on treatment to a patient’s lower back." imgClassName={`${img} object-[48%_center]`} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(7,18,31,.96) 0%, rgba(7,18,31,.78) 44%, rgba(7,18,31,.1) 80%), linear-gradient(0deg, rgba(7,18,31,.92) 0%, transparent 38%)' }} />
+            <p aria-hidden="true" className="display absolute -left-2 top-3 select-none text-[104px] leading-none text-white/[0.06]">THERAPY</p>
             <div className="relative flex h-full flex-col p-5">
               <p className="font-hero flex items-center gap-1 self-end text-[11px] font-semibold text-white/75">
                 <MapPin size={12} aria-hidden="true" /> Kondhwa, Pune
               </p>
               <h3 className={`${display} mt-6 text-[38px] text-white [text-shadow:0_2px_16px_rgba(7,18,31,.8)]`}>
-                Better
+                Hands-on
                 <br />
-                Movement
+                care.
                 <br />
-                <span style={{ color: TEAL }}>Starts now.</span>
+                <span style={{ color: TEAL }}>Real relief.</span>
               </h3>
-              <p className="mt-3 max-w-[200px] text-[13px] leading-snug text-white/80">Understand your body. Restore your movement. Reclaim your everyday life.</p>
+              <p className="mt-3 max-w-[210px] text-[13px] leading-snug text-white/80">Manual therapy and joint mobilisation by experienced physiotherapists.</p>
               <div className="mt-auto flex items-end justify-between">
-                <Pill onClick={() => onTab('services')}>Explore services</Pill>
-                <span className="font-hero text-[9px] font-semibold tracking-[0.25em]" style={{ color: TEAL }}>MOVE BETTER.</span>
+                <Pill onClick={() => onTab('services')}>Our services</Pill>
+                <span className="font-hero text-[9px] font-semibold tracking-[0.25em]" style={{ color: TEAL }}>MANUAL THERAPY</span>
               </div>
             </div>
           </article>
         </li>
 
-        {/* 02 Split screen story */}
+        {/* 02 Split screen: spine & back pain */}
         <li className="w-[88%] shrink-0 snap-start">
-          <article className={`${card} bg-[#101418]`}>
-            <Photo name="app-b2" widths={[800, 1600]} sizes="360px" alt="A man holding his lower back, with his spine glowing to show the painful area." imgClassName={`${img} object-[80%_center]`} />
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(14,18,22,.97) 0%, rgba(14,18,22,.8) 45%, rgba(14,18,22,0) 78%), linear-gradient(0deg, rgba(14,18,22,.85) 0%, transparent 30%)' }} />
-            <ol className="absolute right-4 top-1/2 flex -translate-y-1/2 flex-col gap-3.5" aria-label="Your journey">
-              {['Recover', 'Restore', 'Rebuild', 'Live'].map((t, i) => (
-                <li key={t} className="font-hero flex items-center gap-2 text-[11px] font-semibold text-white/85">
+          <article className={`${card}`} style={{ background: NAVY }}>
+            <div
+              className="absolute -right-16 top-0 h-full w-[80%]"
+              style={{ WebkitMaskImage: 'radial-gradient(ellipse 58% 62% at 50% 50%, #000 50%, transparent 86%)', maskImage: 'radial-gradient(ellipse 58% 62% at 50% 50%, #000 50%, transparent 86%)' }}
+            >
+              <Photo name="app-back" widths={[800]} sizes="320px" alt="An anatomical view of the back with the lower spine glowing to show pain." imgClassName="h-full w-full object-cover" />
+            </div>
+            <ol className="absolute right-4 top-1/2 flex -translate-y-1/2 flex-col gap-3.5" aria-label="How we treat back pain">
+              {['Assess', 'Relieve', 'Strengthen', 'Prevent'].map((t, i) => (
+                <li key={t} className="font-hero flex items-center gap-2 rounded-full bg-[#0B1E4A]/60 py-0.5 pr-2 text-[11px] font-semibold text-white/90 backdrop-blur">
                   <span className="grid size-4 place-items-center rounded-full border" style={{ borderColor: TEAL }}>
                     {i === 0 && <span className="size-2 rounded-full" style={{ background: TEAL }} />}
                   </span>
@@ -473,64 +476,61 @@ function Banners({ onBook, onTab }: { onBook: () => void; onTab: (t: Tab) => voi
                 </li>
               ))}
             </ol>
-            <div className="relative flex h-full max-w-[66%] flex-col p-5">
-              <h3 className={`${display} mt-8 text-[34px] text-white`}>
-                Listen to
+            <div className="relative flex h-full max-w-[56%] flex-col p-5">
+              <h3 className={`${display} mt-8 text-[34px] text-white [text-shadow:0_2px_14px_rgba(11,30,74,.9)]`}>
+                Back pain?
                 <br />
-                <span style={{ color: TEAL }}>your body.</span>
+                <span style={{ color: TEAL }}>Find the cause.</span>
               </h3>
-              <p className="mt-3 text-[13px] leading-snug text-white/80">Understand what your body is telling you. Get expert physiotherapy care.</p>
+              <p className="mt-3 text-[13px] leading-snug text-white/85 [text-shadow:0_1px_10px_rgba(11,30,74,.95)]">Spine care for back pain, slip disc and sciatica.</p>
               <div className="mt-auto">
-                <Pill onClick={() => onTab('services')}>Your journey</Pill>
-                <p className="mt-3 text-[11px] text-white/55">Physiotherapy &amp; Rehabilitation</p>
+                <Pill onClick={onBook}>Book assessment</Pill>
+                <p className="mt-3 text-[11px] text-white/55">Spine care · Pain management</p>
               </div>
             </div>
           </article>
         </li>
 
-        {/* 03 Lifestyle focus */}
+        {/* 03 Post-surgery rehabilitation (photo-led) */}
         <li className="w-[88%] shrink-0 snap-start">
           <article className={`${card} bg-[#DCE6EE]`}>
-            <Photo name="app-b3" widths={[800, 1600]} sizes="360px" alt="A smiling father carrying his laughing son on his shoulders outdoors." imgClassName={`${img} object-[68%_center]`} />
-            <p aria-hidden="true" className="display absolute -right-3 top-2 select-none text-[120px] leading-none text-white/20">LIVE</p>
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 30%, rgba(8,24,44,.55) 55%, rgba(8,24,44,.95) 100%)' }} />
+            <Photo name="svc-postop" sizes="360px" alt="An older woman doing a guided knee exercise after knee replacement with a physiotherapist." imgClassName={`${img} object-[40%_center]`} />
+            <p aria-hidden="true" className="display absolute -right-3 top-2 select-none text-[112px] leading-none text-white/25">REHAB</p>
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 28%, rgba(8,24,44,.55) 52%, rgba(8,24,44,.95) 100%)' }} />
             <div className="relative flex h-full flex-col justify-end p-5">
-              <h3 className="font-hero text-[25px] font-extrabold uppercase leading-[1.05] tracking-[0.01em] text-white">
-                It’s not just about pain.
+              <p className="font-hero text-[12px] font-bold uppercase tracking-[0.14em]" style={{ color: TEAL }}>Post-surgery rehab</p>
+              <h3 className="font-hero mt-1 text-[24px] font-extrabold uppercase leading-[1.05] text-white">
+                After surgery,
                 <br />
-                <span style={{ color: TEAL }}>It’s about your life.</span>
+                <span style={{ color: TEAL }}>back on your feet.</span>
               </h3>
-              <ul className="mt-3 flex gap-3 text-[11.5px] font-semibold text-white/90">
-                {['Move freely', 'Feel stronger', 'Live better'].map((t) => (
+              <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11.5px] font-semibold text-white/90">
+                {['Knee & hip replacement', 'Fractures', 'Ligament repair'].map((t) => (
                   <li key={t} className="flex items-center gap-1">
                     <CheckCircle2 size={13} style={{ color: TEAL }} aria-hidden="true" /> {t}
                   </li>
                 ))}
               </ul>
               <div className="mt-4">
-                <Pill onClick={() => onTab('appointment')}>Start your recovery</Pill>
+                <Pill onClick={() => onTab('appointment')}>Start your rehab</Pill>
               </div>
             </div>
           </article>
         </li>
 
-        {/* 04 Clinical precision */}
+        {/* 04 Advanced pain management (clinical) */}
         <li className="w-[88%] shrink-0 snap-start">
-          <article className={`${card}`} style={{ background: NAVY }}>
-            <div
-              className="absolute -right-10 top-0 h-full w-[78%]"
-              style={{ WebkitMaskImage: 'radial-gradient(ellipse 60% 62% at 50% 48%, #000 50%, transparent 85%)', maskImage: 'radial-gradient(ellipse 60% 62% at 50% 48%, #000 50%, transparent 85%)' }}
-            >
-              <Photo name="app-hero" widths={[800, 1600]} sizes="300px" alt="A translucent running figure with glowing joints." imgClassName="h-full w-full object-cover object-[55%_center]" />
-            </div>
-            <ul className="absolute right-3 top-5 space-y-2.5" aria-label="Our approach">
+          <article className={`${card} bg-[#081736]`}>
+            <Photo name="svc-pain" sizes="360px" alt="A physiotherapist giving ultrasound therapy to a patient’s shoulder." imgClassName={`${img} object-[68%_center]`} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(8,23,54,.97) 0%, rgba(8,23,54,.86) 48%, rgba(8,23,54,.2) 85%), linear-gradient(0deg, rgba(8,23,54,.9) 0%, transparent 40%)' }} />
+            <ul className="absolute right-3 top-5 space-y-2.5" aria-label="Pain-relief therapies">
               {[
-                { i: ClipboardCheck, t: 'Assess' },
-                { i: Route, t: 'Plan' },
-                { i: HandHeart, t: 'Rehabilitate' },
-                { i: TrendingUp, t: 'Progress' },
+                { i: Zap, t: 'Laser therapy' },
+                { i: Activity, t: 'Ultrasound' },
+                { i: MoveVertical, t: 'Traction' },
+                { i: HandHeart, t: 'Manual therapy' },
               ].map(({ i: Icon, t }) => (
-                <li key={t} className="font-hero flex items-center gap-1.5 rounded-full bg-[#0B1E4A]/70 py-1 pl-1 pr-2.5 text-[10.5px] font-semibold text-white backdrop-blur">
+                <li key={t} className="font-hero flex items-center gap-1.5 rounded-full bg-[#0B1E4A]/75 py-1 pl-1 pr-2.5 text-[10.5px] font-semibold text-white backdrop-blur">
                   <span className="grid size-6 place-items-center rounded-full border border-white/25">
                     <Icon size={12} aria-hidden="true" />
                   </span>
@@ -538,15 +538,15 @@ function Banners({ onBook, onTab }: { onBook: () => void; onTab: (t: Tab) => voi
                 </li>
               ))}
             </ul>
-            <div className="relative flex h-full max-w-[62%] flex-col p-5">
+            <div className="relative flex h-full max-w-[60%] flex-col p-5">
               <h3 className={`${display} mt-10 text-[34px] text-white`}>
                 Advanced
                 <br />
-                care.
+                pain
                 <br />
-                <span style={{ color: TEAL }}>Lasting relief.</span>
+                <span style={{ color: TEAL }}>relief.</span>
               </h3>
-              <p className="mt-3 text-[13px] leading-snug text-white/80">Assessment-led physiotherapy for improved mobility.</p>
+              <p className="mt-3 text-[13px] leading-snug text-white/80">Non-surgical pain management with modern therapy equipment.</p>
               <div className="mt-auto">
                 <Pill onClick={onBook}>Book assessment</Pill>
               </div>
@@ -554,21 +554,21 @@ function Banners({ onBook, onTab }: { onBook: () => void; onTab: (t: Tab) => voi
           </article>
         </li>
 
-        {/* 05 Minimal & bold */}
+        {/* 05 Minimal & bold: assessment first */}
         <li className="w-[88%] shrink-0 snap-start">
-          <article className={`${card} bg-[#E9EDF0]`}>
-            <Photo name="app-b5" widths={[800, 1600]} sizes="360px" alt="Silhouette of a person with arms raised on a hilltop at sunrise." imgClassName={`${img} object-[82%_center]`} />
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(240,243,245,.92) 0%, rgba(240,243,245,.55) 55%, rgba(240,243,245,0) 80%)' }} />
+          <article className={`${card} bg-[#EEF2F6]`}>
+            <Photo name="approach-assess" sizes="360px" alt="A physiotherapist measuring a patient’s knee movement with a goniometer." imgClassName={`${img} object-[70%_30%]`} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(240,243,246,.95) 0%, rgba(240,243,246,.7) 50%, rgba(240,243,246,0) 82%)' }} />
             <div className="relative flex h-full flex-col p-5">
               <p className="font-hero flex items-center gap-1 self-end text-[11px] font-semibold text-[#0E1E3D]/70">
                 <MapPin size={12} aria-hidden="true" /> Kondhwa, Pune
               </p>
-              <p className="font-hero mt-8 text-[15px] font-extrabold tracking-[0.55em] text-[#0E1E3D]">BETTER</p>
-              <h3 className="display mt-1 text-[52px] leading-[0.9] text-[#0E1E3D]">Movement</h3>
+              <p className="font-hero mt-8 text-[15px] font-extrabold tracking-[0.5em] text-[#0E1E3D]">ASSESS</p>
+              <h3 className="display mt-1 text-[54px] leading-[0.9] text-[#0E1E3D]">First.</h3>
               <p className="font-hero mt-1 text-[15px] font-extrabold tracking-[0.3em]" style={{ color: '#0FB5A5' }}>
-                STARTS NOW.
+                THEN TREAT.
               </p>
-              <p className="mt-3 max-w-[210px] text-[13px] leading-snug text-[#3B4A63]">Take the first step towards a pain-free, active life.</p>
+              <p className="mt-3 max-w-[200px] text-[13px] leading-snug text-[#3B4A63]">Every plan starts with a one-to-one physiotherapy assessment.</p>
               <div className="mt-auto">
                 <Pill onClick={onBook} light>
                   Book an appointment
