@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Clock, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { ArrowUpRight, Clock, Heart, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { Logo } from './Logo';
 import { GoogleG } from './GoogleG';
 import { clinic, fullAddress, telHref, whatsappHref } from '../config/clinic';
@@ -122,6 +122,9 @@ export function Footer() {
           <p className="flex flex-wrap gap-x-6 gap-y-2">
             <Link to="/privacy" className="inline-block py-2 hover:text-[#0E1E3D] md:py-0">Privacy</Link>
             <span>Information on this site is general and not a diagnosis.</span>
+            <a href="https://cliniko.in" target="_blank" rel="noopener" className="inline-flex items-center gap-1 py-2 hover:text-[#0E1E3D] md:py-0">
+              Made with <Heart size={13} className="fill-[#E5484D] text-[#E5484D]" aria-label="love" /> by <span className="font-semibold text-[#0E1E3D]">cliniko.in</span>
+            </a>
           </p>
         </div>
       </div>
