@@ -13,7 +13,7 @@
 import { clinic, fullAddress } from '../config/clinic';
 import { regions, regionBySlug, type Region } from '../content/regions';
 import { services, moreServices } from '../content/services';
-import { videos, youtubeChannel } from '../content/media';
+import { facebookPage, instagramProfile, videos, youtubeChannel } from '../content/media';
 import { faqs } from '../content/faqs';
 
 export interface SeoPage {
@@ -94,7 +94,7 @@ function clinicNode() {
     },
     geo: { '@type': 'GeoCoordinates', latitude: clinic.geo.latitude, longitude: clinic.geo.longitude },
     hasMap: clinic.mapsUrl,
-    sameAs: [youtubeChannel, clinic.mapsUrl],
+    sameAs: [youtubeChannel, facebookPage, instagramProfile, clinic.mapsUrl],
     medicalSpecialty: ['https://schema.org/Physiotherapy', 'https://schema.org/Musculoskeletal'],
     availableService: therapies,
     knowsAbout: conditionsTreated,
@@ -132,7 +132,7 @@ function doctorNodes() {
       hasOccupation: { '@type': 'Occupation', name: 'Physiotherapist', occupationLocation: { '@type': 'City', name: 'Pune' } },
       knowsAbout: ['Orthopaedic physiotherapy', 'Pain management', 'Spine care', 'Rehabilitation', ...conditionsTreated.slice(0, 8)],
       worksFor: { '@id': ID.clinic },
-      sameAs: [youtubeChannel],
+      sameAs: [youtubeChannel, facebookPage, instagramProfile],
     },
     {
       '@type': 'Person',
@@ -396,6 +396,8 @@ export function llmsTxt() {
     `- Wheelchair accessible: ${clinic.wheelchairAccessible ? 'yes' : 'no'}`,
     `- Google Maps: ${clinic.mapsUrl}`,
     `- YouTube (patient recovery stories): ${youtubeChannel}`,
+    `- Facebook: ${facebookPage}`,
+    `- Instagram: ${instagramProfile}`,
     `- Booking: call or WhatsApp ${clinic.phone.display}, or use the form at ${SITE}/#book. No doctor’s referral is needed.`,
     '',
     '## Physiotherapists',

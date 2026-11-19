@@ -84,6 +84,8 @@ export interface Video {
 
 /** Patient recovery stories from the clinic's YouTube channel. */
 export const youtubeChannel = 'https://www.youtube.com/@dr.avinashgovind-physiothe4603';
+export const facebookPage = 'https://www.facebook.com/dr.avinashgovind';
+export const instagramProfile = 'https://www.instagram.com/dr.avinashgovind/';
 
 export const videos: Video[] = [
   { id: 'dzYrsgf1NTs', label: 'Post-op comeback in 15 days', topic: 'Post-surgery rehab', title: 'Post-OP Comeback In Just 15 Days | Dr. Avinash Govind' },

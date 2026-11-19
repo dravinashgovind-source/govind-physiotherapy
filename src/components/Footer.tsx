@@ -4,7 +4,9 @@ import { Logo } from './Logo';
 import { GoogleG } from './GoogleG';
 import { clinic, fullAddress, telHref, whatsappHref } from '../config/clinic';
 import { regions } from '../content/regions';
-import { youtubeChannel } from '../content/media';
+import { facebookPage, instagramProfile, youtubeChannel } from '../content/media';
+
+const socialPill = 'font-hero inline-flex items-center gap-2.5 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-[#0E1E3D] shadow-sm hover:shadow-md';
 
 const quickLinks = [
   { to: '/#services', label: 'Services' },
@@ -52,6 +54,31 @@ export function Footer() {
                   <path d="M11.5 6v8l7-4z" fill="#fff" />
                 </svg>
                 YouTube
+              </a>
+              <a href={facebookPage} target="_blank" rel="noopener noreferrer" className={socialPill}>
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="12" fill="#1877F2" />
+                  <path d="M15.12 15.47 15.65 12h-3.32V9.75c0-.95.46-1.87 1.95-1.87h1.51V4.93s-1.37-.23-2.68-.23c-2.74 0-4.53 1.66-4.53 4.66V12H5.53v3.47h3.05V24a12.1 12.1 0 0 0 3.75 0v-8.53z" fill="#fff" />
+                </svg>
+                Facebook
+              </a>
+              <a href={instagramProfile} target="_blank" rel="noopener noreferrer" className={socialPill}>
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                  <defs>
+                    <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+                      <stop offset="0" stopColor="#FDF497" />
+                      <stop offset=".05" stopColor="#FDF497" />
+                      <stop offset=".45" stopColor="#FD5949" />
+                      <stop offset=".6" stopColor="#D6249F" />
+                      <stop offset=".9" stopColor="#285AEB" />
+                    </radialGradient>
+                  </defs>
+                  <rect width="24" height="24" rx="6.5" fill="url(#ig-grad)" />
+                  <rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" strokeWidth="1.8" />
+                  <circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" strokeWidth="1.8" />
+                  <circle cx="16.1" cy="7.9" r="1" fill="#fff" />
+                </svg>
+                Instagram
               </a>
             </div>
           </div>
